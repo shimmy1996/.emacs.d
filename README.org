@@ -7,7 +7,6 @@ My humble collection of Emacs config, modeled after [[https://github.com/admiral
 
 After installation, you may need to run ~M-x list-packages~ and reload ~init.el~.
 
-
 * Modules
 
 |-----------------------------+-----------------------|
@@ -15,6 +14,6 @@ After installation, you may need to run ~M-x list-packages~ and reload ~init.el~
 |-----------------------------+-----------------------|
 | [[file:modules/package.org]]    | Package management.   |
 | [[file:modules/aesthetics.org]] | UI and theme configs. |
-| [[file:modules/auctex.org ]]    | ~auctex~ settings.    |
+| [[file:modules/auctex.org ]]    | Auctex settings.      |
 |-----------------------------+-----------------------|
 
