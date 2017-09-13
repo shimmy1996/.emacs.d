@@ -1,0 +1,20 @@
+#+TITLE: My Emacs Config
+#+AUTHOR: Shimmy Xu 
+
+* Introduction
+
+My humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]].
+
+After installation, you may need to run ~M-x list-packages~ and reload ~init.el~.
+
+
+* Modules
+
+|-----------------------------+-----------------------|
+| File                        | Notes                 |
+|-----------------------------+-----------------------|
+| [[file:modules/package.org]]    | Package management.   |
+| [[file:modules/aesthetics.org]] | UI and theme configs. |
+| [[file:modules/auctex.org ]]    | ~auctex~ settings.    |
+|-----------------------------+-----------------------|
+

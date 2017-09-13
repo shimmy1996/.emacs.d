@@ -1,0 +1,16 @@
+# ignore everything
+*
+
+# git stuff
+!.gitignore
+!LICENCE
+!README.org
+
+# simplemacs init
+!init.el
+
+# modules
+!modules/
+!modules/aesthetics.org
+!modules/auctex.org
+!modules/package.org

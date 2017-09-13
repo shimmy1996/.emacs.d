@@ -1,0 +1,17 @@
+#+TITLE: auctex
+#+AUTHOR: Shimmy Xu
+
+* Latex Mode Settings
+Placeholder for now. 
+
+#+BEGIN_SRC emacs-lisp 
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t)
+#+END_SRC 
+
