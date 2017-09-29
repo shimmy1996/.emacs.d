@@ -9,23 +9,9 @@
 
 (require 'org)
 
-;; package: Emacs Package Manager
+;; Load my configs
 ;; ------------------------------------------------------------------------
-(org-babel-load-file (expand-file-name
-		      "~/.emacs.d/modules/package.org"
-		      user-emacs-directory))
-
-;; aesthetics: UI and quality of life changes
-;; ------------------------------------------------------------------------
-(org-babel-load-file (expand-file-name
-		      "~/.emacs.d/modules/aesthetics.org"
-		      user-emacs-directory))
-
-;; auctex: Better Latex Support
-;; ------------------------------------------------------------------------
-(org-babel-load-file (expand-file-name
-		      "~/.emacs.d/modules/auctex.org"
-		      user-emacs-directory))
+(org-babel-load-file "~/.emacs.d/README.org")
 
 ;; Auto appended from here on
 ;; ------------------------------------------------------------------------
@@ -34,7 +20,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (linum-relative fcitx base16-theme auctex))))
+ '(package-selected-packages (quote (helm linum-relative fcitx base16-theme auctex))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

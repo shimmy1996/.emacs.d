@@ -6,11 +6,6 @@
 !LICENCE
 !README.org
 
-# simplemacs init
+# emacs init
 !init.el
 
-# modules
-!modules/
-!modules/aesthetics.org
-!modules/auctex.org
-!modules/package.org

@@ -3,13 +3,278 @@
 
 * Introduction
 
-My humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]].
+This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is just fantastic and my config is not too complicated for a single file to handle (yet). 
 
 After installation, you may need to run ~M-x list-packages~ and reload ~init.el~.
 
-* Modules
+** Module Descriptions
 
-| File                        | Notes                 |
-| [[file:modules/package.org]]    | Package management.   |
-| [[file:modules/aesthetics.org]] | UI and theme configs. |
-| [[file:modules/auctex.org ]]    | Auctex settings.      |
+| Module     | Notes                 |
+| [[Packages]]   | Package management.   |
+| [[Aesthetics]] | UI and theme configs. |
+| [[Org-mode]]   | Org-mode settings.    |
+| [[Helm]]       | Autocompletion        |
+| [[Auctex]]     | Auctex Settings       |
+
+* Packages
+Manage my package settings. 
+** Package Repositories
+
+Initialize Emacs Package Manager and add repositories (only melpa for now). 
+
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                      (not (gnutls-available-p))))
+         (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
+    (add-to-list 'package-archives (cons "melpa" url) t))
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+  (package-initialize)
+#+END_SRC
+
+** Base packages to install
+
+List the base packages I would like to install here.
+
+#+BEGIN_SRC emacs-lisp
+  (setq my-package-list '(auctex
+                          base16-theme
+                          helm))
+#+END_SRC
+
+** Install base packages
+
+Makes sure all packages listed above are installed. 
+
+#+BEGIN_SRC emacs-lisp
+  (mapc #'package-install my-package-list)
+#+END_SRC
+
+* Aesthetics
+
+Mostly aesthetics and quality of life changes. 
+
+** UI Settings
+Hide menu, scrollbar and toolbars. 
+
+#+BEGIN_SRC emacs-lisp
+  (menu-bar-mode -1)
+  (toggle-scroll-bar -1)
+  (tool-bar-mode -1)
+#+END_SRC
+
+Remove scrollbar for any new frames as well, useful for ~emacsclient~.
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'default-frame-alist
+               '(vertical-scroll-bars . nil))
+#+END_SRC
+
+Fills up gap in the border when tiling emacs to half-screen. 
+
+#+BEGIN_SRC emacs-lisp
+(setq frame-resize-pixelwise t)
+#+END_SRC
+
+Use Source Code Pro as the default font. 
+
+#+BEGIN_SRC emacs-lisp
+  (setq default-frame-alist '((font . "Source Code Pro-12")))
+#+END_SRC
+
+** Line Wrapping
+
+Enable line wrapping by default.
+
+#+BEGIN_SRC emacs-lisp
+  (toggle-truncate-lines)
+#+END_SRC
+ 
+** Color Theme
+
+Solarized light or monokai.
+
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'base16-monokai t)
+#+END_SRC
+
+** Line Highlighting
+
+Enable line highlighting.
+
+#+BEGIN_SRC emacs-lisp
+  (global-hl-line-mode t)
+#+END_SRC
+
+** Line Numbering
+
+Enable line numbering. 
+
+#+BEGIN_SRC emacs-lisp
+  (linum-mode)
+#+END_SRC
+
+Install relative line numbering support.
+
+#+BEGIN_SRC emacs-lisp
+  (package-install 'linum-relative)
+#+END_SRC
+
+Enable relative mode, and display current line number instead of 0.
+
+#+BEGIN_SRC emacs-lisp
+  (linum-relative-global-mode)
+  (setq linum-relative-current-symbol "")
+#+END_SRC
+
+Force width of line numbering bar to 3 digit wide. 
+
+#+BEGIN_SRC emacs-lisp
+  (setq linum-format "%3d ")
+#+END_SRC
+
+** Fcitx
+
+Install fcitx support. 
+
+#+BEGIN_SRC emacs-lisp 
+  (package-install 'fcitx)
+  (require 'fcitx)         
+  (fcitx-aggressive-setup) 
+  (setq fcitx-use-dbus t)  
+#+END_SRC
+
+* Org-mode
+** Set Link Format
+Do not collapse the links. 
+#+BEGIN_SRC emacs-lisp
+  (org-toggle-link-display)
+#+END_SRC
+
+* Helm
+Stolen from Admiral Akber's config.
+
+** Info
+
+Helm is incredible, it really supercharges emacs. It's a framework for
+incremental searching / completion / narrowing down options. Sounds
+simple, and it is in application, and it's so worth it.
+
+Web: [[https://emacs-helm.github.io/helm/]]
+Git: [[https://github.com/emacs-helm/helm]]
+
+#+BEGIN_SRC emacs-lisp
+  (require 'helm-config)
+  (helm-mode t)
+#+END_SRC
+
+** Visual customization
+
+I want helm to automatically resize and appear in the current buffer
+only.
+
+#+BEGIN_SRC emacs-lisp
+  (setq helm-autoresize-mode 1)
+  (setq helm-split-window-in-side-p t)
+#+END_SRC
+
+** Fuzzy matching
+
+Fuzzy matching works most of the time, it does seem to have the issue
+of only matching forward i.e. "machine snow" will not match with "snow
+machine". 
+
+It does make it a lot easier to search through emacs functions though
+as you only need to remember one part of the function name.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Enable Fuzzy Matching
+  (setq helm-recentf-fuzzy-match       t
+        helm-buffers-fuzzy-matching    t
+        helm-recentf-fuzzy-match       t
+        helm-buffers-fuzzy-matching    t
+        helm-locate-fuzzy-match        t
+        helm-apropos-fuzzy-match       t
+        helm-lisp-fuzzy-completion     t
+        helm-candidate-number-limit    100)
+#+END_SRC
+
+** Keybindings
+Above defaults overides such as =M-x= these are custom bindings.
+
+*** Self help
+
+The emacs culture is to have great documentation with your functions,
+all searchable via =apropos=. Helm provides a nice interface to this,
+use it often.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-h a") 'helm-apropos)
+  (global-set-key (kbd "C-h i") 'helm-info-emacs)
+#+END_SRC
+
+*** Buffers and files
+
+Buffers and files are an obvious case where helm is very useful.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x b")   'helm-mini)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "M-x")     'helm-M-x)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x C-r") 'helm-recentf)
+  (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks)
+#+END_SRC
+
+*** Advanced editing
+
+Kill ring memory, grepping, etc, all gorgeous with helm.
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-y")     'helm-show-kill-ring)
+  (global-set-key (kbd "C-x c g") 'helm-do-grep)
+  (global-set-key (kbd "C-x c o") 'helm-occur)
+#+END_SRC
+
+*** The overloaded tab key
+
+The good ol' =TAB= key is used for a lot, in this case I want to make
+sure that when used in helm that it completes in helm, not attempting
+to insert a snippet or something.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+#+END_SRC
+
+Also, the following makes sure that tab works when running in terminal
+mode:
+
+#+BEGIN_SRC emacs-lisp
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+#+END_SRC
+
+This requires fixing the select other actions which IIRC is set to
+=C-i= by default.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key helm-map (kbd "C-z") 'helm-select-action)
+#+END_SRC
+
+* Auctex
+
+** Latex Mode Settings
+Placeholder for now. 
+
+#+BEGIN_SRC
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t)
+#+END_SRC 
+
