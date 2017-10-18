@@ -5,16 +5,20 @@
 
 This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is just fantastic and my config is not too complicated for a single file to handle (yet). 
 
-After installation, you may need to run ~M-x list-packages~ and reload ~init.el~.
+After installation, you may need to run =M-x list-packages= and reload =init.el~.
 
 ** Module Descriptions
 
-| Module     | Notes                 |
+| Module         | Notes                 |
+|----------------+-----------------------|
 | [[Packages]]   | Package management.   |
 | [[Aesthetics]] | UI and theme configs. |
 | [[Org-mode]]   | Org-mode settings.    |
-| [[Helm]]       | Autocompletion        |
-| [[Auctex]]     | Auctex Settings       |
+| [[Helm]]       | Autocompletion.       |
+| [[Auctex]]     | Latex settings.       |
+| [[Ox-hugo]]    | =hugo= Exporter       |
+| [[Magit]]      | Git interface.        |
+#+TBLFM: $2=hugo= Exporter
 
 * Packages
 Manage my package settings. 
@@ -23,24 +27,27 @@ Manage my package settings.
 Initialize Emacs Package Manager and add repositories (only melpa for now). 
 
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                      (not (gnutls-available-p))))
-         (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
-    (add-to-list 'package-archives (cons "melpa" url) t))
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-  (package-initialize)
+(package-initialize) ;; You might already have this line
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
+  (add-to-list 'package-archives (cons "melpa" url) t))
+(when (< emacs-major-version 24)
+  ;; For important compatibility libraries like cl-lib
+(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(package-initialize)
 #+END_SRC
 
 ** Base packages to install
 
-List the base packages I would like to install here.
+List the base packages I would like to install here. Mostly just the core packages for each subtree.
 
 #+BEGIN_SRC emacs-lisp
   (setq my-package-list '(auctex
                           base16-theme
+                          ox-hugo
+			  magit
                           helm))
 #+END_SRC
 
@@ -53,7 +60,6 @@ Makes sure all packages listed above are installed.
 #+END_SRC
 
 * Aesthetics
-
 Mostly aesthetics and quality of life changes. 
 
 ** UI Settings
@@ -65,7 +71,7 @@ Hide menu, scrollbar and toolbars.
   (tool-bar-mode -1)
 #+END_SRC
 
-Remove scrollbar for any new frames as well, useful for ~emacsclient~.
+Remove scrollbar for any new frames as well, useful for =emacsclient~.
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist
@@ -85,14 +91,20 @@ Use Source Code Pro as the default font.
 #+END_SRC
 
 ** Line Wrapping
-
 Enable line wrapping by default.
-
 #+BEGIN_SRC emacs-lisp
   (toggle-truncate-lines)
+#+end_SRC
+
+** Highlight Lines Over 80
+Highlight portions of line over 80 characters. 
+#+BEGIN_SRC emacs-lisp
+ (require 'whitespace)
+ (setq whitespace-style '(face empty tabs lines-tail trailing))
+ (global-whitespace-mode t)
 #+END_SRC
- 
-** Color Theme
+
+** Color Themes
 
 Solarized light or monokai.
 
@@ -146,11 +158,24 @@ Install fcitx support.
   (setq fcitx-use-dbus t)  
 #+END_SRC
 
+** Customize Settings
+Save customized settings in a seperate file than =init.el=.
+#+BEGIN_SRC emacs-lisp
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file)
+#+END_SRC
+
 * Org-mode
 ** Set Link Format
 Do not collapse the links. 
 #+BEGIN_SRC emacs-lisp
   (org-toggle-link-display)
+#+END_SRC
+
+** Subtree Indention
+Do not change text indention when promoting/demoting subtrees.
+#+BEGIN_SRC emacs-lisp
+  (setq org-adapt-indentation nil)
 #+END_SRC
 
 * Helm
@@ -207,7 +232,7 @@ Above defaults overides such as =M-x= these are custom bindings.
 *** Self help
 
 The emacs culture is to have great documentation with your functions,
-all searchable via =apropos=. Helm provides a nice interface to this,
+all searchable via =apropos~. Helm provides a nice interface to this,
 use it often.
 
 #+BEGIN_SRC emacs-lisp
@@ -256,7 +281,7 @@ mode:
 #+END_SRC
 
 This requires fixing the select other actions which IIRC is set to
-=C-i= by default.
+~C-i= by default.
 
 #+BEGIN_SRC emacs-lisp
   (define-key helm-map (kbd "C-z") 'helm-select-action)
@@ -278,3 +303,51 @@ Placeholder for now.
   (setq reftex-plug-into-AUCTeX t)
 #+END_SRC 
 
+* Ox-hugo
+Exporter from =org-mode= to =hugo~.
+** Installation
+Enable =ox-hugo= as an option for exporting.
+
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'ox
+    (require 'ox-hugo))
+#+END_SRC
+
+** Auto Set Export Parameters
+
+#+BEGIN_SRC
+(with-eval-after-load 'org-capture
+  (defun org-hugo-new-subtree-post-capture-template ()
+    "Returns `org-capture' template string for new Hugo post.
+See `org-capture-templates' for more information."
+    (let* (;; http://www.holgerschurig.de/en/emacs-blog-from-org-to-hugo/
+           (date (format-time-string (org-time-stamp-format :long :inactive) (org-current-time)))
+           (title (read-from-minibuffer "Post Title: ")) ;Prompt to enter the post title
+           (fname (org-hugo-slug title)))
+      (mapconcat #'identity
+                 `(
+                   ,(concat "* TODO " title)
+                   ":PROPERTIES:"
+                   ,(concat ":EXPORT_FILE_NAME: " fname)
+                   ,(concat ":EXPORT_DATE: " date) ;Enter current date and time
+                   ":END:"
+                   "%?\n")          ;Place the cursor here finally
+                 "\n")))
+
+  (add-to-list 'org-capture-templates
+               '("h"                ;`org-capture' binding + h
+                 "Hugo post"
+                 entry
+                 ;; It is assumed that below file is present in `org-directory'
+                 ;; and that it has a "Blog Ideas" heading. It can even be a
+                 ;; symlink pointing to the actual location of all-posts.org!
+                 (file+olp "all-posts.org" "Blog Ideas")
+                 (function org-hugo-new-subtree-post-capture-template))))
+#+END_SRC
+* Magit
+Great git interface.
+** Installation
+
+#+BEGIN_SRC emacs-lisp
+  (require 'magit)
+#+END_SRC
