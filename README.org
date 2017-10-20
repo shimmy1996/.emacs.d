@@ -43,8 +43,8 @@ List the base packages I would like to install here. Mostly just the core packag
 #+BEGIN_SRC emacs-lisp
   (setq my-package-list '(auctex
                           base16-theme
+                          magit
                           ox-hugo
-			  magit
                           helm))
 #+END_SRC
 
@@ -128,6 +128,12 @@ Enable line wrapping by default.
 #+BEGIN_SRC emacs-lisp
   (global-visual-line-mode t)
 #+end_SRC
+
+** No Tabs
+Use spaces for indenting.
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
 
 ** Remove Trailing Whitespace
 Remove trailing whitespace upon saving.
