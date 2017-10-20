@@ -4,7 +4,7 @@
 * Introduction
 This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is just fantastic and my config is not too complicated for a single file to handle (yet).
 
-After installation, you may need to run =M-x list-packages= and reload =init.el~.
+After installation, you may need to run =M-x list-packages= and reload =init.el=.
 
 ** Module Descriptions
 Here's a short description for each module.
@@ -144,7 +144,7 @@ Hide menu, scrollbar and toolbars.
   (tool-bar-mode -1)
 #+END_SRC
 
-Remove scrollbar for any new frames as well, useful for =emacsclient~.
+Remove scrollbar for any new frames as well, useful for =emacsclient=.
 
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist
@@ -234,7 +234,7 @@ Above defaults overides such as =M-x= these are custom bindings.
 
 *** Self help
 The emacs culture is to have great documentation with your functions,
-all searchable via =apropos~. Helm provides a nice interface to this,
+all searchable via =apropos=. Helm provides a nice interface to this,
 use it often.
 
 #+BEGIN_SRC emacs-lisp
@@ -280,7 +280,7 @@ mode:
 #+END_SRC
 
 This requires fixing the select other actions which IIRC is set to
-~C-i= by default.
+~C-i~ by default.
 
 #+BEGIN_SRC emacs-lisp
   (define-key helm-map (kbd "C-z") 'helm-select-action)
@@ -303,7 +303,7 @@ Placeholder for now.
 #+END_SRC
 
 * Ox-hugo
-Exporter from =org-mode= to =hugo~.
+Exporter from =org-mode= to =hugo=.
 
 ** Installation
 Enable =ox-hugo= as an option for exporting.
