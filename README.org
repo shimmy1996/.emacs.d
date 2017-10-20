@@ -66,9 +66,11 @@ Solarized light or monokai.
 #+END_SRC
 
 ** Customize Settings
-Save customized settings in a seperate file than =init.el=.
+Save customized settings in a seperate file than =init.el=. Create the customization file if none found.
 #+BEGIN_SRC emacs-lisp
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (unless (file-exists-p custom-file)
+    (write-region "" "" custom-file))
   (load custom-file)
 #+END_SRC
 
