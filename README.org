@@ -135,6 +135,12 @@ Use spaces for indenting.
   (setq-default indent-tabs-mode nil)
 #+END_SRC
 
+** Parenthesis Highlighting
+Highlight matching parenthesis.
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode t)
+#+END_SRC
+
 ** Remove Trailing Whitespace
 Remove trailing whitespace upon saving.
 #+BEGIN_SRC emacs-lisp
@@ -188,6 +194,12 @@ Do not change text indention when promoting/demoting subtrees.
 Automantically enable truncated lines when starting =org-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq-default org-startup-truncated t)
+#+END_SRC
+
+** Turn Off =auto-fill=
+Disable =auto-fill-mode= when in =org-mode=.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-ook 'turn-off-auto-fill)
 #+END_SRC
 
 * Helm
