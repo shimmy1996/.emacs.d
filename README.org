@@ -199,7 +199,7 @@ Automantically enable truncated lines when starting =org-mode=.
 ** Turn Off =auto-fill=
 Disable =auto-fill-mode= when in =org-mode=.
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-ook 'turn-off-auto-fill)
+  (add-hook 'org-mode-hook 'turn-off-auto-fill)
 #+END_SRC
 
 * Helm
