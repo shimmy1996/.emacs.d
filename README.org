@@ -17,6 +17,7 @@ Here's a short description for each module.
 | [[Auctex]]     | Latex settings.       |
 | [[Ox-hugo]]    | =hugo= exporter.      |
 | [[Magit]]      | Git interface.        |
+| [[CC]]         | CC mode.              |
 
 * Packages
 Manage my package settings.
@@ -173,6 +174,15 @@ Use Source Code Pro as the default font.
 
 #+BEGIN_SRC emacs-lisp
   (setq default-frame-alist '((font . "Source Code Pro-12")))
+#+END_SRC
+
+** Save Backups Elsewhere
+Save =*~= backups in =$(pwd)/.bak=.
+
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist
+        '(("." . ".bak"))
+        )
 #+END_SRC
 
 * Org-mode
@@ -376,4 +386,11 @@ Install =magit=.
 Set hot key for =magit-status=.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c g") 'magit-status)
+#+END_SRC
+* CC
+** Default Indention
+Set default indention level to 4 and style to "linux"(do not indent braces).
+#+BEGIN_SRC emacs-lisp
+  (setq-default c-default-style "linux"
+                c-basic-offset 4)
 #+END_SRC
