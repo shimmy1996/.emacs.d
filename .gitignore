@@ -9,3 +9,7 @@
 # emacs init
 !init.el
 
+# yasnippets
+!snippets
+!snippets/*
+!snippets/*/*

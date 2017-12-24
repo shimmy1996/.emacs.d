@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: figure
+# key: figure
+# --
+\begin{figure}[htbp!]
+  \centering
+    \includegraphics[width=${1:0.6}\textwidth]{${2:img}}
+    \caption{${3:caption}}
+\end{figure}
+\FloatBarrier
+$0
