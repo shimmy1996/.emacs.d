@@ -212,7 +212,7 @@ Do not change text indention when promoting/demoting subtrees.
 #+END_SRC
 
 ** Truncate Lines by Default
-Automantically enable truncated lines when starting =org-mode=.
+Automatically enable truncated lines when starting =org-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq-default org-startup-truncated t)
 #+END_SRC
@@ -334,25 +334,54 @@ This requires fixing the select other actions which IIRC is set to
 #+END_SRC
 
 * Auctex
-AUCTEX is an extensible package for writing and formatting TEX files in GNU Emacs.
+=auctex= is an extensible package for writing and formatting TEX files in GNU Emacs.
 
 ** Installation
+Need to use =defer= as =auctex.el= does not actually provide =auctex= feature.
 #+BEGIN_SRC emacs-lisp
   (use-package auctex
+    :defer t
     :ensure t)
 #+END_SRC
 
-** Latex Mode Settings
-
+** Automatic Parsing
+Enable =auctex= to automatically parse buffer information.
 #+BEGIN_SRC emacs-lisp
-  (setq TeX-auto-save t)
   (setq TeX-parse-self t)
+  (setq TeX-auto-save t)
+  (setq TeX-save-query nil)
+#+END_SRC
+
+** Master File Detection
+Let =auctex= figure out the master file for TeX document spread over many files.
+#+BEGIN_SRC emacs-lisp
   (setq-default TeX-master nil)
-  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+#+END_SRC
+
+** Spell Checking
+Spell checking with =flyspell=.
+#+BEGIN_SRC emacs-lisp
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+#+END_SRC
+
+** Enable =reftex=
+Turn on RefTeX Mode for all LaTeX files. This enables you to jump via table of contents.
+The key to invoke this is ~C-c =~.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+#+END_SRC
+
+** Enable =LaTeX-math-mode=
+Enable LaTeX Math mode. This allows macro insertion following ~`~.
+Not exactly useful since we already have =company=.
+#+BEGIN_SRC emacs-lisp
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX t)
+#+END_SRC
+
+*** Auto-complete Sub/Superscripts
+Insert braces after ~_~ or ~^~.
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-electric-sub-and-superscript 1)
 #+END_SRC
 
 * Ox-hugo
@@ -526,16 +555,6 @@ for the language you're using provides more satisfying results.
   (with-eval-after-load 'company
     '(setq company-backends (delete 'company-semantic company-backends)))
 #+END_SRC
-** =company-math= Backends
-Install =company-math= and add it to =company-backends=.
-#+BEGIN_SRC emacs-lisp
-  (use-package company-math
-    :ensure t
-    :init (append '((company-math-symbols-latex
-                     company-math-symbols-unicode
-                     company-latex-commands))
-                  company-backends))
-#+END_SRC
 ** Tooltip Documentation
 Install dependency =pos-tip=.
 #+BEGIN_SRC emacs-lisp
@@ -555,8 +574,28 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
   (setq company-quickhelp-max-lines 20)
   (setq company-quickhelp-use-propertized-text 1)
 #+END_SRC
-** =yasnippet= Key Completion
-Add =company-yasnippet= backend.
+** Backend Configurations
+*** =company-math=
+Install =company-math= and add it to =company-backends=.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-math
+    :ensure t
+    :init (add-to-list 'company-backends
+                       '(company-math-symbols-latex
+                         company-math-symbols-unicode)))
+#+END_SRC
+
+*** =company-auctex=
+Install =company-auctex= and add it to =company-backends=. This is for =acutex= macro completion.
+Adding backends is handled by =company-auctex-init=.
+#+BEGIN_SRC emacs-lisp
+    (use-package company-auctex
+      :ensure t
+      :init (company-auctex-init))
+#+END_SRC
+*** =company-yasnippet=
+Add =company-yasnippet= backend for =yasnippet= key completion.
+Keep this at the end to enable this for all backends.
 #+BEGIN_SRC emacs-lisp
   ;; Add yasnippet support for all company backends
   ;; https://github.com/syl20bnr/spacemacs/pull/179
