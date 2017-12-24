@@ -29,33 +29,14 @@ Manage my package settings.
 Initialize Emacs Package Manager and add repositories (only melpa for now).
 
 #+BEGIN_SRC emacs-lisp
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
-  (add-to-list 'package-archives (cons "melpa" url) t))
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-#+END_SRC
-
-** Base packages to install
-List the base packages I would like to install here. Mostly just the core
-packages for each subtree.
-
-#+BEGIN_SRC emacs-lisp
-  (setq my-package-list '(auctex
-                          base16-theme
-                          magit
-                          ox-hugo
-                          helm))
-#+END_SRC
-
-** Install base packages
-Makes sure all packages listed above are installed.
-
-#+BEGIN_SRC emacs-lisp
-  (mapc #'package-install my-package-list)
+  (require 'package)
+  (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                      (not (gnutls-available-p))))
+         (url (concat (if no-ssl "http" "https") "://melpa.org/packages/")))
+        (add-to-list 'package-archives (cons "melpa" url) t))
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 #+END_SRC
 
 ** Setup =use-package=
@@ -73,6 +54,12 @@ sections.
 Mostly aesthetics and quality of life changes.
 
 ** Color Themes
+Install =base16-theme=.
+#+BEGIN_SRC emacs-lisp
+  (use-package base16-theme
+    :ensure t)
+#+END_SRC
+
 Solarized light or monokai.
 
 #+BEGIN_SRC emacs-lisp
@@ -236,6 +223,12 @@ Disable =auto-fill-mode= when in =org-mode=.
   (add-hook 'org-mode-hook 'turn-off-auto-fill)
 #+END_SRC
 
+** Enable spell checking
+Spell checking with =flyspell-mode=. Would need to install dictionary lib like =aspell= in base system.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'flyspell-mode)
+#+END_SRC
+
 * Helm
 Stolen from Admiral Akber's config.
 
@@ -248,8 +241,10 @@ Web: [[https://emacs-helm.github.io/helm/]]
 Git: [[https://github.com/emacs-helm/helm]]
 
 #+BEGIN_SRC emacs-lisp
+  (use-package helm
+    :ensure t
+    :init (helm-mode t))
   (require 'helm-config)
-  (helm-mode t)
 #+END_SRC
 
 ** Visual customization
@@ -339,11 +334,17 @@ This requires fixing the select other actions which IIRC is set to
 #+END_SRC
 
 * Auctex
+AUCTEX is an extensible package for writing and formatting TEX files in GNU Emacs.
+
+** Installation
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    :ensure t)
+#+END_SRC
 
 ** Latex Mode Settings
-Placeholder for now.
 
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
@@ -361,8 +362,9 @@ Exporter from =org-mode= to =hugo=.
 Enable =ox-hugo= as an option for exporting.
 
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'ox
-    (require 'ox-hugo))
+  (use-package ox-hugo
+    :ensure t
+    :init (with-eval-after-load 'ox (require 'ox-hugo)))
 #+END_SRC
 
 ** Auto Set Export Parameters
@@ -399,11 +401,11 @@ See `org-capture-templates' for more information."
 
 * Magit
 Great git interface.
-
 ** Installation
 Install =magit=.
 #+BEGIN_SRC emacs-lisp
-  (require 'magit)
+  (use-package magit
+    :ensure t)
 #+END_SRC
 
 ** Key Binding
