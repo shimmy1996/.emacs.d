@@ -1,34 +1,32 @@
 #+TITLE: My Emacs Config
 #+AUTHOR: Shimmy Xu
+#+TODO: DISABLED(t) | ENABLED(d)
 
-* Introduction
-This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is just fantastic and my config is not too complicated for a single file to handle (yet).
+This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is fantastic and my config is not too complicated for a single file to handle (yet).
 
-After installation, you may need to run =M-x list-packages= and reload =init.el=.
-
-** Module Descriptions
 Here's a short description for each module.
-| Module             | Notes                       |
-|--------------------+-----------------------------|
-| [[Packages]]           | Package management.         |
-| [[Aesthetics]]         | UI and theme.               |
-| [[Org-mode]]           | Org-mode settings.          |
-| [[Helm]]               | Minibuffer auto-completion. |
-| [[Auctex]]             | Latex settings.             |
-| [[Ox-hugo]]            | =hugo= exporter.            |
-| [[Magit]]              | Git interface.              |
-| [[CC]]                 | CC mode.                    |
-| [[Flycheck]]           | Syntax checking.            |
-| [[Yasnippet]]          | Snippet templates.          |
-| [[Company]]            | Buffer auto-completion.     |
+| Module         | Notes                       |
+|----------------+-----------------------------|
+| [[Packages]]   | Package management.         |
+| [[Aesthetics]] | UI and theme.               |
+| [[Org-mode]]   | Org-mode settings.          |
+| [[Helm]]       | Minibuffer auto-completion. |
+| [[Auctex]]     | Latex settings.             |
+| [[Ox-hugo]]    | =hugo= exporter.            |
+| [[Magit]]      | Git interface.              |
+| [[CC]]         | CC mode.                    |
+| [[Flycheck]]   | Syntax checking.            |
+| [[Yasnippet]]  | Snippet templates.          |
+| [[Company]]    | Buffer auto-completion.     |
 
 * Packages
 Manage my package settings.
 
 ** Package Repositories
-Initialize Emacs Package Manager and add repositories (only melpa for now).
+Initialize Emacs Package Manager and add repositories.
 
 #+BEGIN_SRC emacs-lisp
+  (package-initialize)
   (require 'package)
   (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                       (not (gnutls-available-p))))
@@ -266,6 +264,12 @@ Use Source Code Pro as the default font.
 
 * Org-mode
 Mostly formatting settings in =org-mode=.
+** Installation
+=org= mode comes bundled, but we still need to load it.
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :ensure t)
+#+END_SRC
 
 ** Set Link Format
 Do not collapse the links.
@@ -464,9 +468,9 @@ Enable =ox-hugo= as an option for exporting.
     :init (with-eval-after-load 'ox (require 'ox-hugo)))
 #+END_SRC
 
-** Auto Set Export Parameters
+** DISABLED Auto Set Export Parameters
 Auto sets export parameters when using =org-capture=.
-#+BEGIN_SRC
+#+BEGIN_SRC emacs-lisp
 (with-eval-after-load 'org-capture
   (defun org-hugo-new-subtree-post-capture-template ()
     "Returns `org-capture' template string for new Hugo post.
