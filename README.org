@@ -79,10 +79,11 @@ Save customized settings in a separate file than =init.el=. Create the customiza
 Install fcitx support.
 
 #+BEGIN_SRC emacs-lisp
-  (package-install 'fcitx)
-  (require 'fcitx)
-  (fcitx-aggressive-setup)
-  (setq fcitx-use-dbus t)
+  (use-package fcitx
+    :ensure t
+    :init
+    (fcitx-aggressive-setup)
+    (setq fcitx-use-dbus t))
 #+END_SRC
 
 ** Highlight Lines Over 80
@@ -110,13 +111,14 @@ Enable line numbering.
 Install relative line numbering support.
 
 #+BEGIN_SRC emacs-lisp
-  (package-install 'linum-relative)
+  (use-package linum-relative
+    :ensure t
+    :init (linum-relative-global-mode))
 #+END_SRC
 
-Enable relative mode, and display current line number instead of 0.
+Display current line number instead of 0.
 
 #+BEGIN_SRC emacs-lisp
-  (linum-relative-global-mode)
   (setq linum-relative-current-symbol "")
 #+END_SRC
 
@@ -508,10 +510,10 @@ Install =company= and enable it globally.
     :init (global-company-mode))
 #+END_SRC
 
-** Zero Delay
-No delay for auto-completion.
+** Adjust Delay
+Set delay for auto-completion. 0 would be too extreme and wastes CPU clocks apparently.
 #+BEGIN_SRC emacs-lisp
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.01)
   (setq company-minimum-prefix-length 1)
 #+END_SRC
 
@@ -568,7 +570,7 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
   (use-package company-quickhelp
     :ensure t
     :init (company-quickhelp-mode 1))
-  (setq company-quickhelp-delay 0)
+  (setq company-quickhelp-delay 0.01)
   (setq company-quickhelp-color-background "#272822")
   (setq company-quickhelp-color-foreground "#F8F8F2")
   (setq company-quickhelp-max-lines 20)
