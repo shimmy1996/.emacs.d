@@ -13,3 +13,7 @@
 !snippets
 !snippets/*
 !snippets/*/*
+
+# static assets
+!static
+!static/*
