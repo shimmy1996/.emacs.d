@@ -75,6 +75,72 @@ Save customized settings in a separate file than =init.el=. Create the customiza
   (load custom-file)
 #+END_SRC
 
+** Dashboard Customization
+An extensible emacs startup screen showing you what’s most important.
+*** Installation
+Change default startup screen with =dashboard=.
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook))
+#+END_SRC
+
+*** Customize Banner and Logo
+Customize banner and logo:
+#+BEGIN_SRC emacs-lisp
+  (defvar banner-logo-titles
+    '("Greetings from Emacs!"
+      "42!"
+      "Wubba Lubba Dub-Dub!"
+      "Execute order 66."))
+  (setq dashboard-banner-logo-title
+        (elt banner-logo-titles (random (length banner-logo-titles))))
+  (setq dashboard-startup-banner
+        (expand-file-name "republic.png" user-emacs-directory))
+#+END_SRC
+
+*** Customize Widgets
+**** =dashboard-insert-configs=
+Create widget to display important config files. Use ~c~ to jump to this section.
+#+BEGIN_SRC emacs-lisp
+  (defvar config-file-list
+    (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
+            '("README.org"
+              "init.el")))
+
+  (defun dashboard-insert-configs (list-size)
+    "Add a list of config files."
+    (when (dashboard-insert-recentf-list
+           "Config Files:"
+           (dashboard-subseq config-file-list 0 (length config-file-list)))
+      (dashboard-insert-shortcut "c" "Config Files:")))
+
+  (add-to-list 'dashboard-item-generators '(configs . dashboard-insert-configs))
+#+END_SRC
+
+**** =dashboard-insert-init-time=
+Display initialization time.
+#+BEGIN_SRC emacs-lisp
+  (defun dashboard-insert-init-time (list-size)
+     "Displays emacs init time."
+     (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
+
+  (add-to-list 'dashboard-item-generators '(init-time . dashboard-insert-init-time))
+#+END_SRC
+
+**** Apply All Widgets
+Set items to display:
+#+BEGIN_SRC emacs-lisp
+  (setq dashboard-items '((recents  . 10)
+  ;                        (bookmarks . 5)
+  ;                        (projects . 5)
+  ;                        (agenda . 5)
+  ;                        (registers . 5)
+                          (configs)
+                          (init-time)))
+#+END_SRC
+
 ** Fcitx
 Install fcitx support.
 
