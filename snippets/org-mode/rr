@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: rr
+# key: rr_
+# --
+#+BEGIN_SRC R :session *R* :results output ${1:graphics :file first.png} :exports both
+$0
+#+END_SRC

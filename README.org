@@ -18,6 +18,7 @@ Here's a short description for each module.
 | [[Flycheck]]   | Syntax checking.            |
 | [[Yasnippet]]  | Snippet templates.          |
 | [[Company]]    | Buffer auto-completion.     |
+| [[ESS]]        | Emacs Speaks Statistics.    |
 
 * Packages
 Manage my package settings.
@@ -87,13 +88,14 @@ Change default startup screen with =dashboard=.
 *** Customize Banner and Logo
 Customize banner and logo:
 #+BEGIN_SRC emacs-lisp
-  (defvar banner-logo-titles
+  (defvar user/dashboard-banner-logo-titles
     '("Greetings from Emacs!"
       "42!"
       "Wubba Lubba Dub-Dub!"
       "Execute order 66."))
   (setq dashboard-banner-logo-title
-        (elt banner-logo-titles (random (length banner-logo-titles))))
+        (elt user/dashboard-banner-logo-titles
+             (random (length user/dashboard-banner-logo-titles))))
   (setq dashboard-startup-banner
         (expand-file-name "static/republic.png" user-emacs-directory))
 #+END_SRC
@@ -102,7 +104,7 @@ Customize banner and logo:
 **** =dashboard-insert-configs=
 Create widget to display important config files. Use ~c~ to jump to this section.
 #+BEGIN_SRC emacs-lisp
-  (defvar config-file-list
+  (defvar user/config-file-list
     (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
             '("README.org"
               "init.el")))
@@ -111,7 +113,7 @@ Create widget to display important config files. Use ~c~ to jump to this section
     "Add a list of config files."
     (when (dashboard-insert-recentf-list
            "Config Files:"
-           (dashboard-subseq config-file-list 0 (length config-file-list)))
+           (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
       (dashboard-insert-shortcut "c" "Config Files:")))
 
   (add-to-list 'dashboard-item-generators '(configs . dashboard-insert-configs))
@@ -166,18 +168,23 @@ Enable line highlighting.
 #+END_SRC
 
 ** Line Numbering
-Enable line numbering.
+Enable line numbering for =prog-mode= and org/LaTeX because DocView breaks =linum=.
 
 #+BEGIN_SRC emacs-lisp
-  (linum-mode)
+  (add-hook 'prog-mode-hook 'linum-on)
+  (add-hook 'org-mode-hook 'linum-on)
+  (add-hook 'LaTeX-mode-hook 'linum-on)
 #+END_SRC
 
-Install relative line numbering support.
+Install relative line numbering support for =prog-mode=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package linum-relative
     :ensure t
-    :init (linum-relative-global-mode))
+    :init
+    (add-hook 'prog-mode-hook 'linum-relative-on)
+    (add-hook 'org-mode-hook 'linum-relative-on)
+    (add-hook 'LaTeX-mode-hook 'linum-relative-on))
 #+END_SRC
 
 Display current line number instead of 0.
@@ -299,6 +306,49 @@ Disable =auto-fill-mode= when in =org-mode=.
 Spell checking with =flyspell-mode=. Would need to install dictionary lib like =aspell= in base system.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'flyspell-mode)
+#+END_SRC
+** Install HTML Export Support
+Need to install =htmlize=.
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+END_SRC
+
+Do not export validation link.
+#+BEGIN_SRC emacs-lisp
+  (setq org-html-validation-link nil)
+#+END_SRC
+** Enable Evaluation
+Enable evaluation of various languages in org-mode.
+#+BEGIN_SRC emacs-lisp
+  (defvar user/org-babel-enabled-languages
+    '(emacs-lisp
+      python
+      R
+      org)
+    "Extra languages user can execute in org-babel code blocks.")
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (mapcar
+    (lambda (arg) (cons arg t))
+    user/org-babel-enabled-languages))
+#+END_SRC
+
+There is no need to confirm execution for these languages.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-confirm-babel-evaluate
+        (lambda (lang body)
+          (not (member lang
+                       (mapcar (lambda (arg) (symbol-name arg))
+                               user/org-babel-enabled-languages)))))
+#+END_SRC
+
+** Display Inline Images
+Display inline images for =org-babel= execution results.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+(add-hook 'org-mode-hook 'org-display-inline-images)
 #+END_SRC
 
 * Helm
@@ -681,4 +731,13 @@ Keep this at the end to enable this for all backends.
               '(:with company-yasnippet))))
 
   (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+#+END_SRC
+* ESS
+Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such as GNU Emacs and XEmacs. It is designed to support editing of scripts and interaction with various statistical analysis programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
+
+** Installation
+Install ESS.
+#+BEGIN_SRC emacs-lisp
+  (use-package ess
+    :ensure t)
 #+END_SRC
