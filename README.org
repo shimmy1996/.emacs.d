@@ -90,6 +90,7 @@ Customize banner and logo:
 #+BEGIN_SRC emacs-lisp
   (defvar user/dashboard-banner-logo-titles
     '("Greetings from Emacs!"
+      "Project-iM@CS"
       "42!"
       "Wubba Lubba Dub-Dub!"
       "Execute order 66."))
@@ -242,6 +243,7 @@ Save =*~= backups in =$(pwd)/.bak=.
 #+END_SRC
 
 ** UI Settings
+*** *bars
 Hide menu, scrollbar and toolbars.
 
 #+BEGIN_SRC emacs-lisp
@@ -257,16 +259,31 @@ Remove scrollbar for any new frames as well, useful for =emacsclient=.
                '(vertical-scroll-bars . nil))
 #+END_SRC
 
+*** Half screen fix
 Fills up gap in the border when tiling emacs to half-screen.
 
 #+BEGIN_SRC emacs-lisp
 (setq frame-resize-pixelwise t)
 #+END_SRC
 
-Use Source Code Pro as the default font.
-
+*** Default Font
+Use Source Code Pro/Iosevka as the default font.
+**** DISABLED Source Code Pro
 #+BEGIN_SRC emacs-lisp
   (setq default-frame-alist '((font . "Source Code Pro-12")))
+#+END_SRC
+
+**** Iosevka
+#+BEGIN_SRC emacs-lisp
+  (setq default-frame-alist '((font . "Iosevka-13")))
+#+END_SRC
+
+
+*** DISABLED CJK Font fallback
+Fallback for CJK fonts.
+#+BEGIN_SRC emacs-lisp
+  (set-fontset-font "fontset-default" nil
+                    (font-spec :size 12 :name "Noto Sans Mono CJK SC"))
 #+END_SRC
 
 * Org-mode
@@ -565,11 +582,28 @@ Set hot key for =magit-status=.
   (global-set-key (kbd "C-c g") 'magit-status)
 #+END_SRC
 * CC
-** Default Indention
+** DISABLED Default Indention
 Set default indention level to 4 and style to "linux"(do not indent braces).
 #+BEGIN_SRC emacs-lisp
   (setq-default c-default-style "linux"
                 c-basic-offset 4)
+#+END_SRC
+
+** Google Style
+Google's C/C++ style for c-mode.
+*** Installation
+#+BEGIN_SRC emacs-lisp
+  (use-package google-c-style
+    :ensure t
+    :init
+    (add-hook 'c-mode-common-hook 'google-set-c-style)
+    (add-hook 'c-mode-common-hook 'google-make-newline-indent)
+#+END_SRC
+
+** Treat =.h= as C++
+Identify =.h= files as C++ files instead of C. To enable =c++-mode=, type =M-x c\+\+-mode= in =helm=.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
 
 * Flycheck
@@ -589,8 +623,38 @@ Install =flycheck=.
 Use =c++14= as the C++ standard.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'c++-mode-hook
-            (lambda () ((setq flycheck-clang-language-standard "c++14")
-                        (setq flycheck-gcc-language-standard "c++14"))))
+            (lambda () (progn
+                         (setq flycheck-cppcheck-standards '("c++14"))
+                         (setq flycheck-clang-language-standard "c++14")
+                         (setq flycheck-gcc-language-standard "c++14"))))
+#+END_SRC
+
+** Set Google C++ Syntax Checker
+*** Install =flycheck-google-cpplint=
+Add Google C++ Style checker for Flycheck. (Now deprecated, using local copy).
+On Arch Linux, if using AUR package =cpplint=, need to modify command in =flycheck-google-cpplint.el=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-google-cpplint
+    :load-path "local/flycheck-google-cpplint/"
+    :config
+    (eval-after-load 'flycheck
+      '(progn
+         (require 'flycheck-google-cpplint)
+         ;; Add Google C++ Style checker.
+         ;; In default, syntax checked by Clang and Cppcheck.
+         ;; Use Google Checker after there are no warnings are cleared
+         (flycheck-add-next-checker 'c/c++-cppcheck
+                                    '(warning . c/c++-googlelint)))))
+#+END_SRC
+
+*** Set Checker Parameters
+Set various parameters for the checker.
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   '(flycheck-googlelint-verbose "5")
+   '(flycheck-googlelint-filter "-legal/copyright")
+   '(flycheck-googlelint-linelength "80"))
 #+END_SRC
 
 * Yasnippet
