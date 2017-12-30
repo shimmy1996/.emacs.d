@@ -597,7 +597,7 @@ Google's C/C++ style for c-mode.
     :ensure t
     :init
     (add-hook 'c-mode-common-hook 'google-set-c-style)
-    (add-hook 'c-mode-common-hook 'google-make-newline-indent)
+    (add-hook 'c-mode-common-hook 'google-make-newline-indent))
 #+END_SRC
 
 ** Treat =.h= as C++
@@ -643,9 +643,9 @@ On Arch Linux, if using AUR package =cpplint=, need to modify command in =flyche
          (require 'flycheck-google-cpplint)
          ;; Add Google C++ Style checker.
          ;; In default, syntax checked by Clang and Cppcheck.
-         ;; Use Google Checker after there are no warnings are cleared
+         ;; Use Google Checker after errors are cleared
          (flycheck-add-next-checker 'c/c++-cppcheck
-                                    '(warning . c/c++-googlelint)))))
+                                    '(error . c/c++-googlelint)))))
 #+END_SRC
 
 *** Set Checker Parameters

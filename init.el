@@ -16,7 +16,8 @@
       (re-search-forward
        (format "^\\*\\{1,%d\\} " (length (match-string 1)))
        nil 1)
-      (beginning-of-line))
+      (forward-line -1)
+      (end-of-line))
      ;; Log ENABLED Subtrees
      ((looking-at "^\\*+ \\(ENABLED\\|\\).*$")
       (message "%s" (match-string 0)))

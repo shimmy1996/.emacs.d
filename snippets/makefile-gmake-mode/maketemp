@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: maketemp
+# key: maketemp
+# --
+CC = ${1:clang++}
+CFLAGS = -std=c++14 -Wall
+
+${2:test}: $2.cc
+	$(CC) $(CFLAGS) $< -o $@
+clean:
+	rm ./$2
+$0
