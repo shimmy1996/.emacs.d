@@ -19,6 +19,7 @@ Here's a short description for each module.
 | [[Yasnippet]]  | Snippet templates.          |
 | [[Company]]    | Buffer auto-completion.     |
 | [[ESS]]        | Emacs Speaks Statistics.    |
+| [[Projectile]] | Project management.         |
 
 * Packages
 Manage my package settings.
@@ -133,9 +134,9 @@ Display initialization time.
 **** Apply All Widgets
 Set items to display:
 #+BEGIN_SRC emacs-lisp
-  (setq dashboard-items '((recents  . 10)
-  ;                        (bookmarks . 5)
-  ;                        (projects . 5)
+  (setq dashboard-items '((recents  . 5)
+                          (bookmarks . 5)
+                          (projects . 8)
   ;                        (agenda . 5)
   ;                        (registers . 5)
                           (configs)
@@ -804,4 +805,26 @@ Install ESS.
 #+BEGIN_SRC emacs-lisp
   (use-package ess
     :ensure t)
+#+END_SRC
+
+* Projectile
+Projectile is a project interaction library for Emacs. Its goal is to provide a nice set of features operating on a project level without introducing external dependencies(when feasible).
+
+** Installation
+Install =projectile=.
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init
+    (projectile-global-mode))
+#+END_SRC
+
+** Enable =helm= support
+Since I use =helm=, I need to install additional support.
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-projectile
+    :ensure t
+    :init
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on))
 #+END_SRC
