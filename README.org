@@ -100,7 +100,7 @@ Customize banner and logo:
         (elt user/dashboard-banner-logo-titles
              (random (length user/dashboard-banner-logo-titles))))
   (setq dashboard-startup-banner
-        (expand-file-name "static/republic.png" user-emacs-directory))
+        (expand-file-name "static/sxs.png" user-emacs-directory))
 #+END_SRC
 
 *** Customize Widgets
