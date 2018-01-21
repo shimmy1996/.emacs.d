@@ -20,6 +20,7 @@ Here's a short description for each module.
 | [[Company]]    | Buffer auto-completion.     |
 | [[ESS]]        | Emacs Speaks Statistics.    |
 | [[Projectile]] | Project management.         |
+| [[Keyfreq]]    | Record command frequency.   |
 
 * Packages
 Manage my package settings.
@@ -827,4 +828,14 @@ Since I use =helm=, I need to install additional support.
     :init
     (setq projectile-completion-system 'helm)
     (helm-projectile-on))
+#+END_SRC
+* Keyfreq
+** Installation
+Install =keyfreq=.
+#+BEGIN_SRC emacs-lisp
+    (use-package keyfreq
+      :ensure t
+      :init
+      (keyfreq-mode 1)
+      (keyfreq-autosave-mode 1))
 #+END_SRC
