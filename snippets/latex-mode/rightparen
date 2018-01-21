@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: rightparen
+# key: \)
+# --
+\right)$0

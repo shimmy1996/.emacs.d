@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: leftparen
+# key: \(
+# --
+\left($0

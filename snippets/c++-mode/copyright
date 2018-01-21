@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: copyright
+# key: copyright
+# --
+// Copyright (c) ${1:2018} Shimmy Xu
+$0
