@@ -830,6 +830,7 @@ Since I use =helm=, I need to install additional support.
     (helm-projectile-on))
 #+END_SRC
 * Keyfreq
+Records command frequency. I am planning on adjusting my keyboard layout with this information.
 ** Installation
 Install =keyfreq=.
 #+BEGIN_SRC emacs-lisp
