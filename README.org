@@ -288,6 +288,13 @@ Fallback for CJK fonts.
                     (font-spec :size 12 :name "Noto Sans Mono CJK SC"))
 #+END_SRC
 
+** Zoom In
+Use mouse wheel to adjust zoom level.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key [C-mouse-4] 'text-scale-increase)
+  (global-set-key [C-mouse-5] 'text-scale-decrease)
+#+END_SRC
+
 * Org-mode
 Mostly formatting settings in =org-mode=.
 ** Installation
