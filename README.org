@@ -199,7 +199,7 @@ Display current line number instead of 0.
 Force width of line numbering bar to 3 digit wide.
 
 #+BEGIN_SRC emacs-lisp
-  (setq linum-format "%3d ")
+  (setq linum-format "%3d")
 #+END_SRC
 
 ** Line Wrapping
