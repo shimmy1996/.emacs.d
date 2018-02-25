@@ -254,18 +254,22 @@ Hide menu, scrollbar and toolbars.
   (tool-bar-mode -1)
 #+END_SRC
 
+**** New Frame Scrollbar
 Remove scrollbar for any new frames as well, useful for =emacsclient=.
 
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'default-frame-alist
-               '(vertical-scroll-bars . nil))
+  (defun user/disable-scroll-bars (frame)
+    (modify-frame-parameters frame
+                             '((vertical-scroll-bars . nil)
+                               (horizontal-scroll-bars . nil))))
+  (add-hook 'after-make-frame-functions 'user/disable-scroll-bars)
 #+END_SRC
 
 *** Half screen fix
 Fills up gap in the border when tiling emacs to half-screen.
 
 #+BEGIN_SRC emacs-lisp
-(setq frame-resize-pixelwise t)
+  (setq frame-resize-pixelwise t)
 #+END_SRC
 
 *** Default Font
