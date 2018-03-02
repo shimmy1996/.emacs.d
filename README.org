@@ -167,6 +167,7 @@ If using emacs daemon with =systemd=, remember to add to the
 Highlight portions of line over 80 characters in =prog-mode=.
 #+BEGIN_SRC emacs-lisp
   (require 'whitespace)
+  (setq whitespace-line-column 80)
   (setq whitespace-style '(face empty tabs lines-tail trailing))
   (add-hook 'prog-mode-hook 'whitespace-mode)
 #+END_SRC
