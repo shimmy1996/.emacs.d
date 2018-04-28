@@ -867,3 +867,18 @@ Install =keyfreq=.
       (keyfreq-mode 1)
       (keyfreq-autosave-mode 1))
 #+END_SRC
+* Clang-format
+** Installation
+Install and set hot keys for formatting.
+#+BEGIN_SRC emacs-lisp
+  (use-package clang-format
+    :ensure t
+    :init
+    (global-set-key (kbd "C-c i") 'clang-format-region)
+    (global-set-key (kbd "C-c u") 'clang-format-buffer))
+#+END_SRC
+** Set code style
+Use Google's C++ style.
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables '(clang-format-style "Google"))
+#+END_SRC
