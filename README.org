@@ -5,22 +5,23 @@
 This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is fantastic and my config is not too complicated for a single file to handle (yet).
 
 Here's a short description for each module.
-| Module         | Notes                       |
-|----------------+-----------------------------|
-| [[Packages]]   | Package management.         |
-| [[Aesthetics]] | UI and theme.               |
-| [[Org-mode]]   | Org-mode settings.          |
-| [[Helm]]       | Minibuffer auto-completion. |
-| [[Auctex]]     | Latex settings.             |
-| [[Ox-hugo]]    | =hugo= exporter.            |
-| [[Magit]]      | Git interface.              |
-| [[CC]]         | CC mode.                    |
-| [[Flycheck]]   | Syntax checking.            |
-| [[Yasnippet]]  | Snippet templates.          |
-| [[Company]]    | Buffer auto-completion.     |
-| [[ESS]]        | Emacs Speaks Statistics.    |
-| [[Projectile]] | Project management.         |
-| [[Keyfreq]]    | Record command frequency.   |
+| Module           | Notes                       |
+|------------------+-----------------------------|
+| [[Packages]]     | Package management.         |
+| [[Aesthetics]]   | UI and theme.               |
+| [[Org-mode]]     | Org-mode settings.          |
+| [[Helm]]         | Minibuffer auto-completion. |
+| [[Auctex]]       | Latex settings.             |
+| [[Ox-hugo]]      | =hugo= exporter.            |
+| [[Magit]]        | Git interface.              |
+| [[CC]]           | CC mode.                    |
+| [[Flycheck]]     | Syntax checking.            |
+| [[Yasnippet]]    | Snippet templates.          |
+| [[Company]]      | Buffer auto-completion.     |
+| [[ESS]]          | Emacs Speaks Statistics.    |
+| [[Projectile]]   | Project management.         |
+| [[Keyfreq]]      | Record command frequency.   |
+| [[Clang-format]] | Format C++ source code.     |
 
 * Packages
 Manage my package settings.
