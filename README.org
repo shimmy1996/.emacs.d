@@ -687,6 +687,17 @@ Set various parameters for the checker.
    '(flycheck-googlelint-linelength "80"))
 #+END_SRC
 
+** Set Clang Analyzer
+*** Install =flycheck-clang-analyzer=
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :init
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+      (flycheck-clang-analyzer-setup)))
+#+END_SRC
+
 * Yasnippet
 YASnippet is a template system for Emacs. It allows you to type an
 abbreviation and automatically expand it into function templates.
