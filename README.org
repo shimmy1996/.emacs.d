@@ -555,12 +555,19 @@ Insert braces after ~_~ or ~^~.
 Exporter from =org-mode= to =hugo=.
 
 ** Installation
+
 Enable =ox-hugo= as an option for exporting.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ox-hugo
     :ensure t
     :init (with-eval-after-load 'ox (require 'ox-hugo)))
+#+END_SRC
+** Export Key Bindings
+Wrap key bindings in =<kbd>=.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-hugo-use-code-for-kbd t)
 #+END_SRC
 
 ** DISABLED Auto Set Export Parameters
