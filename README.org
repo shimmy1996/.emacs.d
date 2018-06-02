@@ -5,8 +5,8 @@
 This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is fantastic and my config is not too complicated for a single file to handle (yet).
 
 Here's a short description for each module.
-| Module           | Notes                       |
-|------------------+-----------------------------|
+| Module       | Notes                       |
+|--------------+-----------------------------|
 | [[Packages]]     | Package management.         |
 | [[Aesthetics]]   | UI and theme.               |
 | [[Org-mode]]     | Org-mode settings.          |
@@ -22,6 +22,7 @@ Here's a short description for each module.
 | [[Projectile]]   | Project management.         |
 | [[Keyfreq]]      | Record command frequency.   |
 | [[Clang-format]] | Format C++ source code.     |
+| [[Rust-mode]]    | Settings for rust.          |
 
 * Packages
 Manage my package settings.
@@ -900,4 +901,26 @@ Install and set hot keys for formatting.
 Use Google's C++ style.
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables '(clang-format-style "Google"))
+#+END_SRC
+* Rust-mode
+A compilation of settings for programming in rust.
+** Rust-mode
+Install =rust-mode=.
+#+BEGIN_SRC emacs-lisp
+  (use-package rust-mode
+    :ensure t
+    :init
+    (setq rust-format-on-save t)
+    (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  )
+#+END_SRC
+** Flycheck Support
+Better flycheck support via =flycheck-rust=.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-rust
+    :ensure t
+    :init
+    (with-eval-after-load 'rust-mode
+      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  )
 #+END_SRC
