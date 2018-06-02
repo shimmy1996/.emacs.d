@@ -811,13 +811,20 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
 #+END_SRC
 ** Backend Configurations
 *** =company-math=
-Install =company-math= and add it to =company-backends=.
+Install =company-math=.
 #+BEGIN_SRC emacs-lisp
   (use-package company-math
-    :ensure t
-    :init (add-to-list 'company-backends
-                       '(company-math-symbols-latex
-                         company-math-symbols-unicode)))
+    :ensure t)
+#+END_SRC
+
+Add it to =company-backends= when in =TeX-mode=.
+#+BEGIN_SRC emacs-lisp
+  (defun company-math-init ()
+    (setq-local company-backends
+                (append '((company-math-symbols-latex company-latex-commands))
+                        company-backends)))
+
+  (add-hook 'TeX-mode-hook 'company-math-init)
 #+END_SRC
 
 *** =company-auctex=
