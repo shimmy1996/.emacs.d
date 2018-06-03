@@ -5,8 +5,8 @@
 This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is fantastic and my config is not too complicated for a single file to handle (yet).
 
 Here's a short description for each module.
-| Module       | Notes                       |
-|--------------+-----------------------------|
+| Module           | Notes                       |
+|------------------+-----------------------------|
 | [[Packages]]     | Package management.         |
 | [[Aesthetics]]   | UI and theme.               |
 | [[Org-mode]]     | Org-mode settings.          |
@@ -82,11 +82,13 @@ Save customized settings in a separate file than =init.el=. Create the customiza
 An extensible emacs startup screen showing you what’s most important.
 *** Installation
 Change default startup screen with =dashboard=.
+Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
     :ensure t
     :config
-    (dashboard-setup-startup-hook))
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda()(get-buffer "*dashboard*"))))
 #+END_SRC
 
 *** Customize Banner and Logo
