@@ -2,7 +2,11 @@
 #+AUTHOR: Shimmy Xu
 #+TODO: DISABLED(t) | ENABLED(d)
 
-This is my humble collection of Emacs config, modeled after [[https://github.com/admiralakber/simplemacs][simplemacs]], documented in an hopefully understandable manner. I went from using multiple =.org= files back to a single one because =org-mode= is fantastic and my config is not too complicated for a single file to handle (yet).
+This is my humble collection of Emacs config, modeled after
+[[https://github.com/admiralakber/simplemacs][simplemacs]], documented
+in an hopefully understandable manner. I went from using multiple
+=.org= files back to a single one because =org-mode= is fantastic and
+my config is not too complicated for a single file to handle (yet).
 
 Here's a short description for each module.
 | Module           | Notes                       |
@@ -29,7 +33,6 @@ Manage my package settings.
 
 ** Package Repositories
 Initialize Emacs Package Manager and add repositories.
-
 #+BEGIN_SRC emacs-lisp
   (package-initialize)
   (require 'package)
@@ -45,7 +48,6 @@ Initialize Emacs Package Manager and add repositories.
 ** Setup =use-package=
 Setup =use-package= so that package requirements can be handled in separate
 sections.
-
 #+BEGIN_SRC emacs-lisp
   ;; Bootstrap `use-package'
   (unless (package-installed-p 'use-package)
@@ -64,7 +66,6 @@ Install =base16-theme=.
 #+END_SRC
 
 Solarized light or monokai.
-
 #+BEGIN_SRC emacs-lisp
   (load-theme 'base16-monokai t)
 #+END_SRC
@@ -80,6 +81,7 @@ Save customized settings in a separate file than =init.el=. Create the customiza
 
 ** Dashboard Customization
 An extensible emacs startup screen showing you what’s most important.
+
 *** Installation
 Change default startup screen with =dashboard=.
 Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
@@ -92,12 +94,12 @@ Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
 #+END_SRC
 
 *** Customize Banner and Logo
-Customize banner and logo:
+Customize banner and logo.
 #+BEGIN_SRC emacs-lisp
   (defvar user/dashboard-banner-logo-titles
     '("Greetings from Emacs!"
       "Project-iM@CS"
-      "42!"
+      "42"
       "Wubba Lubba Dub-Dub!"
       "Execute order 66."))
   (setq dashboard-banner-logo-title
@@ -116,24 +118,24 @@ Create widget to display important config files. Use ~c~ to jump to this section
             '("README.org"
               "init.el")))
 
-  (defun dashboard-insert-configs (list-size)
+  (defun user/dashboard-insert-configs (list-size)
     "Add a list of config files."
     (when (dashboard-insert-recentf-list
            "Config Files:"
            (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
       (dashboard-insert-shortcut "c" "Config Files:")))
 
-  (add-to-list 'dashboard-item-generators '(configs . dashboard-insert-configs))
+  (add-to-list 'dashboard-item-generators '(configs . user/dashboard-insert-configs))
 #+END_SRC
 
 **** =dashboard-insert-init-time=
 Display initialization time.
 #+BEGIN_SRC emacs-lisp
-  (defun dashboard-insert-init-time (list-size)
+  (defun user/dashboard-insert-init-time (list-size)
      "Displays emacs init time."
      (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
 
-  (add-to-list 'dashboard-item-generators '(init-time . dashboard-insert-init-time))
+  (add-to-list 'dashboard-item-generators '(init-time . user/dashboard-insert-init-time))
 #+END_SRC
 
 **** Apply All Widgets
@@ -150,7 +152,6 @@ Set items to display:
 
 ** Fcitx
 Install fcitx support.
-
 #+BEGIN_SRC emacs-lisp
   (use-package fcitx
     :ensure t
@@ -183,7 +184,6 @@ Highlight portions of line over 80 characters in =prog-mode=.
 
 ** Line Highlighting
 Enable line highlighting.
-
 #+BEGIN_SRC emacs-lisp
   (global-hl-line-mode t)
 #+END_SRC
@@ -247,6 +247,7 @@ Install =rainbow-delimiters= and enable it for =prog-mode=.
     :ensure t
     :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+END_SRC
+
 ** Remove Trailing Whitespace
 Remove trailing whitespace upon saving.
 #+BEGIN_SRC emacs-lisp
@@ -255,7 +256,6 @@ Remove trailing whitespace upon saving.
 
 ** Save Backups Elsewhere
 Save =*~= backups in =$(pwd)/.bak=.
-
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist
         '(("." . ".bak"))
@@ -265,7 +265,6 @@ Save =*~= backups in =$(pwd)/.bak=.
 ** UI Settings
 *** *bars
 Hide menu, scrollbar and toolbars.
-
 #+BEGIN_SRC emacs-lisp
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
@@ -274,7 +273,6 @@ Hide menu, scrollbar and toolbars.
 
 **** New Frame Scrollbar
 Remove scrollbar for any new frames as well, useful for =emacsclient=.
-
 #+BEGIN_SRC emacs-lisp
   (defun user/disable-scroll-bars (frame)
     (modify-frame-parameters frame
@@ -285,13 +283,13 @@ Remove scrollbar for any new frames as well, useful for =emacsclient=.
 
 *** Half screen fix
 Fills up gap in the border when tiling emacs to half-screen.
-
 #+BEGIN_SRC emacs-lisp
   (setq frame-resize-pixelwise t)
 #+END_SRC
 
 *** Default Font
 Use Source Code Pro/Iosevka as the default font.
+
 **** DISABLED Source Code Pro
 #+BEGIN_SRC emacs-lisp
   (setq default-frame-alist '((font . "Source Code Pro-12")))
@@ -301,7 +299,6 @@ Use Source Code Pro/Iosevka as the default font.
 #+BEGIN_SRC emacs-lisp
   (setq default-frame-alist '((font . "Iosevka-13")))
 #+END_SRC
-
 
 *** DISABLED CJK Font fallback
 Fallback for CJK fonts.
@@ -383,7 +380,6 @@ Enable evaluation of various languages in org-mode.
 #+END_SRC
 
 There is no need to confirm execution for these languages.
-
 #+BEGIN_SRC emacs-lisp
   (setq org-confirm-babel-evaluate
         (lambda (lang body)
@@ -409,7 +405,6 @@ simple, and it is in application, and it's so worth it.
 
 Web: [[https://emacs-helm.github.io/helm/]]
 Git: [[https://github.com/emacs-helm/helm]]
-
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure t
@@ -420,7 +415,6 @@ Git: [[https://github.com/emacs-helm/helm]]
 ** Visual customization
 I want helm to automatically resize and appear in the current buffer
 only.
-
 #+BEGIN_SRC emacs-lisp
   (setq helm-autoresize-mode 1)
   (setq helm-split-window-in-side-p t)
@@ -433,7 +427,6 @@ machine".
 
 It does make it a lot easier to search through emacs functions though
 as you only need to remember one part of the function name.
-
 #+BEGIN_SRC emacs-lisp
   ;; Enable Fuzzy Matching
   (setq helm-recentf-fuzzy-match       t
@@ -453,7 +446,6 @@ Above defaults overides such as =M-x= these are custom bindings.
 The emacs culture is to have great documentation with your functions,
 all searchable via =apropos=. Helm provides a nice interface to this,
 use it often.
-
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-h a") 'helm-apropos)
   (global-set-key (kbd "C-h i") 'helm-info-emacs)
@@ -461,7 +453,6 @@ use it often.
 
 *** Buffers and files
 Buffers and files are an obvious case where helm is very useful.
-
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x b")   'helm-mini)
   (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
@@ -473,7 +464,6 @@ Buffers and files are an obvious case where helm is very useful.
 
 *** Advanced editing
 Kill ring memory, grepping, etc, all gorgeous with helm.
-
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-y")     'helm-show-kill-ring)
   (global-set-key (kbd "C-x c g") 'helm-do-grep)
@@ -484,21 +474,18 @@ Kill ring memory, grepping, etc, all gorgeous with helm.
 The good ol' =TAB= key is used for a lot, in this case I want to make
 sure that when used in helm that it completes in helm, not attempting
 to insert a snippet or something.
-
 #+BEGIN_SRC emacs-lisp
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
 #+END_SRC
 
 Also, the following makes sure that tab works when running in terminal
 mode:
-
 #+BEGIN_SRC emacs-lisp
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
 #+END_SRC
 
 This requires fixing the select other actions which IIRC is set to
 ~C-i~ by default.
-
 #+BEGIN_SRC emacs-lisp
   (define-key helm-map (kbd "C-z") 'helm-select-action)
 #+END_SRC
@@ -558,55 +545,22 @@ Insert braces after ~_~ or ~^~.
 Exporter from =org-mode= to =hugo=.
 
 ** Installation
-
 Enable =ox-hugo= as an option for exporting.
-
 #+BEGIN_SRC emacs-lisp
   (use-package ox-hugo
     :ensure t
     :init (with-eval-after-load 'ox (require 'ox-hugo)))
 #+END_SRC
+
 ** Export Key Bindings
 Wrap key bindings in =<kbd>=.
-
 #+BEGIN_SRC emacs-lisp
   (setq org-hugo-use-code-for-kbd t)
 #+END_SRC
 
-** DISABLED Auto Set Export Parameters
-Auto sets export parameters when using =org-capture=.
-#+BEGIN_SRC emacs-lisp
-(with-eval-after-load 'org-capture
-  (defun org-hugo-new-subtree-post-capture-template ()
-    "Returns `org-capture' template string for new Hugo post.
-See `org-capture-templates' for more information."
-    (let* (;; http://www.holgerschurig.de/en/emacs-blog-from-org-to-hugo/
-           (date (format-time-string (org-time-stamp-format :long :inactive) (org-current-time)))
-           (title (read-from-minibuffer "Post Title: ")) ;Prompt to enter the post title
-           (fname (org-hugo-slug title)))
-      (mapconcat #'identity
-                 `(
-                   ,(concat "* TODO " title)
-                   ":PROPERTIES:"
-                   ,(concat ":EXPORT_FILE_NAME: " fname)
-                   ,(concat ":EXPORT_DATE: " date) ;Enter current date and time
-                   ":END:"
-                   "%?\n")          ;Place the cursor here finally
-                 "\n")))
-
-  (add-to-list 'org-capture-templates
-               '("h"                ;`org-capture' binding + h
-                 "Hugo post"
-                 entry
-                 ;; It is assumed that below file is present in `org-directory'
-                 ;; and that it has a "Blog Ideas" heading. It can even be a
-                 ;; symlink pointing to the actual location of all-posts.org!
-                 (file+olp "all-posts.org" "Blog Ideas")
-                 (function org-hugo-new-subtree-post-capture-template))))
-#+END_SRC
-
 * Magit
 Great git interface.
+
 ** Installation
 Install =magit=.
 #+BEGIN_SRC emacs-lisp
@@ -619,6 +573,7 @@ Set hot key for =magit-status=.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c g") 'magit-status)
 #+END_SRC
+
 * CC Mode
 ** DISABLED Default Indention
 Set default indention level to 4 and style to "linux"(do not indent braces).
@@ -639,7 +594,8 @@ Google's C/C++ style for c-mode.
 #+END_SRC
 
 ** Treat =.h= as C++
-Identify =.h= files as C++ files instead of C. To enable =c++-mode=, type =M-x c\+\+-mode= in =helm=.
+Identify =.h= files as C++ files instead of C. To enable =c++-mode=
+manually, type =M-x c\+\+-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
@@ -673,7 +629,6 @@ Add Google C++ Style checker for =flycheck= (Now deprecated, using local copy).
 On Arch Linux, if using AUR package =cpplint=, need to modify command
 in =flycheck-google-cpplint.el= to use =cpplint= instead of
 =cppling.py=.
-
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck-google-cpplint
     :load-path "local/flycheck-google-cpplint/"
@@ -716,7 +671,6 @@ abbreviation and automatically expand it into function templates.
 Install =yasnippet=. Load =yasnippet= when =yas-minor-mode= is called
 and add the hook for =yas-minor-mode= for programming modes. Reload
 the snippets on start up.
-
 #+BEGIN_SRC emacs-lisp
   (require 'cl)
   (use-package yasnippet
@@ -728,7 +682,6 @@ the snippets on start up.
 
 ** Install =yasnippet-snippets=
 =yasnippet-snippets= is a collection of snippets for many langulages.
-
 #+BEGIN_SRC emacs-lisp
   (use-package yasnippet-snippets
     :ensure t)
@@ -755,7 +708,6 @@ Set delay for auto-completion. 0 would be too extreme and wastes CPU clocks appa
 ** =yasnippet= Conflict
 Pressing tab with company mode conflicts with =yasnippets=, this is
 the only fix that I found that makes everything work as expected.
-
 #+BEGIN_SRC emacs-lisp
   (defun check-expansion ()
     (save-excursion
@@ -795,13 +747,15 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
 #+BEGIN_SRC emacs-lisp
   (use-package company-quickhelp
     :ensure t
-    :init (company-quickhelp-mode t))
-  (setq company-quickhelp-delay 0.01)
-  (setq company-quickhelp-color-background "#272822")
-  (setq company-quickhelp-color-foreground "#F8F8F2")
-  (setq company-quickhelp-max-lines 20)
-  (setq company-quickhelp-use-propertized-text t)
+    :init
+    (company-quickhelp-mode t)
+    (setq company-quickhelp-delay 0.01)
+    (setq company-quickhelp-color-background "#272822")
+    (setq company-quickhelp-color-foreground "#F8F8F2")
+    (setq company-quickhelp-max-lines 20)
+    (setq company-quickhelp-use-propertized-text t))
 #+END_SRC
+
 ** Backend Configurations
 *** =company-math=
 Install =company-math= and add it to =company-backends=.
@@ -832,6 +786,7 @@ Adding backends is handled by =company-auctex-init=.
     :ensure t
     :init (company-auctex-init))
 #+END_SRC
+
 *** =company-yasnippet=
 Add =company-yasnippet= backend for =yasnippet= key completion.
 #+BEGIN_SRC emacs-lisp
@@ -849,7 +804,9 @@ Install ESS.
 #+END_SRC
 
 * Projectile
-Projectile is a project interaction library for Emacs. Its goal is to provide a nice set of features operating on a project level without introducing external dependencies(when feasible).
+Projectile is a project interaction library for Emacs. Its goal is to
+provide a nice set of features operating on a project level without
+introducing external dependencies(when feasible).
 
 ** Installation
 Install =projectile=.
@@ -869,8 +826,11 @@ Since I use =helm=, I need to install additional support.
     (setq projectile-completion-system 'helm)
     (helm-projectile-on))
 #+END_SRC
+
 * Keyfreq
-Records command frequency. I am planning on adjusting my keyboard layout with this information.
+Records command frequency. I am planning on adjusting my keyboard
+layout with this information.
+
 ** Installation
 Install =keyfreq=.
 #+BEGIN_SRC emacs-lisp
@@ -880,6 +840,7 @@ Install =keyfreq=.
       (keyfreq-mode 1)
       (keyfreq-autosave-mode 1))
 #+END_SRC
+
 * Clang-format
 ** Installation
 Install and set hot keys for formatting.
@@ -890,15 +851,19 @@ Install and set hot keys for formatting.
     (global-set-key (kbd "C-c i") 'clang-format-region)
     (global-set-key (kbd "C-c u") 'clang-format-buffer))
 #+END_SRC
+
 ** Set code style
 Use Google's C++ style.
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables '(clang-format-style "Google"))
 #+END_SRC
+
 * Rust-mode
 A compilation of settings for programming in rust.
+
 ** Rust-mode
-Install =rust-mode=.
+Install =rust-mode=, use =rust-fmt= to format the code upon saving,
+and automatically enable =rust-mode= for =*.rs= files.
 #+BEGIN_SRC emacs-lisp
   (use-package rust-mode
     :ensure t
@@ -907,6 +872,7 @@ Install =rust-mode=.
     (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
   )
 #+END_SRC
+
 ** Flycheck Support
 Better flycheck support via =flycheck-rust=.
 #+BEGIN_SRC emacs-lisp
@@ -914,6 +880,5 @@ Better flycheck support via =flycheck-rust=.
     :ensure t
     :init
     (with-eval-after-load 'rust-mode
-      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-  )
+      (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 #+END_SRC
