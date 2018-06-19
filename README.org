@@ -14,7 +14,7 @@ Here's a short description for each module.
 | [[Auctex]]       | Latex settings.             |
 | [[Ox-hugo]]      | =hugo= exporter.            |
 | [[Magit]]        | Git interface.              |
-| [[CC]]           | CC mode.                    |
+| [[CC Mode]]      | CC mode.                    |
 | [[Flycheck]]     | Syntax checking.            |
 | [[Yasnippet]]    | Snippet templates.          |
 | [[Company]]      | Buffer auto-completion.     |
@@ -619,7 +619,7 @@ Set hot key for =magit-status=.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c g") 'magit-status)
 #+END_SRC
-* CC
+* CC Mode
 ** DISABLED Default Indention
 Set default indention level to 4 and style to "linux"(do not indent braces).
 #+BEGIN_SRC emacs-lisp
