@@ -189,35 +189,12 @@ Enable line highlighting.
 #+END_SRC
 
 ** Line Numbering
-Enable line numbering for =prog-mode= and org/LaTeX because DocView breaks =linum=.
-
+Use =display-line-numbers= instead of =linum=.
+Enable relative line numbering, and set minimum width to 3.
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'prog-mode-hook 'linum-on)
-  (add-hook 'org-mode-hook 'linum-on)
-  (add-hook 'LaTeX-mode-hook 'linum-on)
-#+END_SRC
-
-Install relative line numbering support for =prog-mode=.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package linum-relative
-    :ensure t
-    :init
-    (add-hook 'prog-mode-hook 'linum-relative-on)
-    (add-hook 'org-mode-hook 'linum-relative-on)
-    (add-hook 'LaTeX-mode-hook 'linum-relative-on))
-#+END_SRC
-
-Display current line number instead of 0.
-
-#+BEGIN_SRC emacs-lisp
-  (setq linum-relative-current-symbol "")
-#+END_SRC
-
-Force width of line numbering bar to 3 digit wide.
-
-#+BEGIN_SRC emacs-lisp
-  (setq linum-format "%3d")
+  (setq-default display-line-numbers-type (quote relative))
+  (setq-default display-line-numbers-width 3)
+  (global-display-line-numbers-mode)
 #+END_SRC
 
 ** Line Wrapping
