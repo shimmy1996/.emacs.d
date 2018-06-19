@@ -85,23 +85,28 @@ An extensible emacs startup screen showing you what’s most important.
 *** Installation
 Change default startup screen with =dashboard=.
 Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
+Also refresh dashboard to ensure customizations take effect.
 #+BEGIN_SRC emacs-lisp
   (use-package dashboard
     :ensure t
     :config
     (dashboard-setup-startup-hook)
-    (setq initial-buffer-choice (lambda()(get-buffer "*dashboard*"))))
+    (setq initial-buffer-choice (lambda()
+                                  (dashboard-refresh-buffer)
+                                  (get-buffer "*dashboard*"))))
 #+END_SRC
 
 *** Customize Banner and Logo
 Customize banner and logo.
 #+BEGIN_SRC emacs-lisp
   (defvar user/dashboard-banner-logo-titles
-    '("Greetings from Emacs!"
+    '("42"
+      "9 MORE SEASONS UNTIL I GET THAT DIPPING SZECHUAN SAUCE!"
+      "Execute order 66."
+      "Greetings from Emacs!"
       "Project-iM@CS"
-      "42"
-      "Wubba Lubba Dub-Dub!"
-      "Execute order 66."))
+      "Weak emperors mean strong viceroys."
+      "Wubba Lubba Dub-Dub!"))
   (setq dashboard-banner-logo-title
         (elt user/dashboard-banner-logo-titles
              (random (length user/dashboard-banner-logo-titles))))
