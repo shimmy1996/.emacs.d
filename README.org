@@ -8,21 +8,13 @@ in an hopefully understandable manner. I went from using multiple
 =.org= files back to a single one because =org-mode= is fantastic and
 my config is not too complicated for a single file to handle (yet).
 
-| Module           | Function                    |
-|------------------+-----------------------------|
-| [[Packages]]     | Package management.         |
-| [[Aesthetics]]   | UI and theme.               |
-| [[Enhancements]] | Plug-and-play enhancements. |
-| [[Org-mode]]     | Org-mode settings.          |
-| [[Helm]]         | Minibuffer auto-completion. |
-| [[Auctex]]       | Latex settings.             |
-| [[CC Mode]]      | CC mode.                    |
-| [[Flycheck]]     | Syntax checking.            |
-| [[Yasnippet]]    | Snippet templates.          |
-| [[Company]]      | Buffer auto-completion.     |
-| [[Projectile]]   | Project management.         |
-| [[Clang-format]] | Format C++ source code.     |
-| [[Rust-mode]]    | Settings for rust.          |
+| Module            | Function                     |
+|-------------------+------------------------------|
+| [[Packages]]      | Package management.          |
+| [[Aesthetics]]    | UI and theme.                |
+| [[Enhancements]]  | Plug-and-play enhancements.  |
+| [[Plugins]]       | Larger scale packages.       |
+| [[Mode Specific]] | Settings specific to a mode. |
 
 * Packages
 Manage my package settings.
@@ -85,7 +77,7 @@ Install fcitx support.
 #+END_SRC
 
 *** Daemon Support
-If using emacs daemon with =systemd=, remember to add to the
+If using Emacs daemon with =systemd=, remember to add to the
 =.service= file:
 
 #+BEGIN_SRC sh
@@ -183,7 +175,7 @@ Remove scrollbar for any new frames as well, useful for =emacsclient=.
 #+END_SRC
 
 *** Half screen fix
-Fills up gap in the border when tiling emacs to half-screen.
+Fills up gap in the border when tiling Emacs to half-screen.
 #+BEGIN_SRC emacs-lisp
   (setq frame-resize-pixelwise t)
 #+END_SRC
@@ -217,11 +209,11 @@ Use mouse wheel to adjust zoom level.
 #+END_SRC
 
 * Enhancements
-Packages providing enhancements to emacs interface. Mostly simple
+Packages providing enhancements to Emacs interface. Mostly simple
 plug-and-play packages.
 
 ** Dashboard
-An extensible emacs startup screen showing you what’s most important.
+An extensible Emacs startup screen showing you what’s most important.
 
 *** Installation
 Change default startup screen with =dashboard=.
@@ -278,7 +270,7 @@ Create widget to display important config files. Use ~c~ to jump to this section
 Display initialization time.
 #+BEGIN_SRC emacs-lisp
   (defun user/dashboard-insert-init-time (list-size)
-     "Displays emacs init time."
+     "Displays Emacs init time."
      (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
 
   (add-to-list 'dashboard-item-generators '(init-time . user/dashboard-insert-init-time))
@@ -294,13 +286,6 @@ Set items to display:
   ;                        (registers . 5)
                           (configs)
                           (init-time)))
-#+END_SRC
-
-** ESS
-Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such as GNU Emacs and XEmacs. It is designed to support editing of scripts and interaction with various statistical analysis programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
-#+BEGIN_SRC emacs-lisp
-  (use-package ess
-    :ensure t)
 #+END_SRC
 
 ** HTML Export
@@ -331,55 +316,472 @@ Install =magit= and bind =magit-status= to ~C-c g~.
     (global-set-key (kbd "C-c g") 'magit-status))
 #+END_SRC
 
-* Org-mode
-=org-mode= specific settings.
+** Projectile
+Projectile is a project interaction library for Emacs. Its goal is to
+provide a nice set of features operating on a project level without
+introducing external dependencies(when feasible).
 
-** Installation
-Org comes bundled, but we still need to load it.
+*** Installation
+Install =projectile=.
 #+BEGIN_SRC emacs-lisp
-  (use-package org
+  (use-package projectile
+    :ensure t
+    :init
+    (projectile-global-mode))
+#+END_SRC
+
+*** Enable =helm= support
+Since I use =helm=, I need to install additional support.
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-projectile
+    :ensure t
+    :init
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on))
+#+END_SRC
+
+* Plugins
+Larger scale packages that either requires more configuration, or
+fundamentally changes how Emacs behave. Because these package
+configurations is a lot more complex and may be spread out, any
+subtree that depends on packages in this section will have a tag to
+mark the dependency.
+
+** Helm
+Stolen from Admiral Akber's config.
+
+*** Info
+Helm is incredible, it really supercharges emacs. It's a framework for
+incremental searching / completion / narrowing down options. Sounds
+simple, and it is in application, and it's so worth it.
+
+Web: [[https://emacs-helm.github.io/helm/]]
+Git: [[https://github.com/emacs-helm/helm]]
+#+BEGIN_SRC emacs-lisp
+  (use-package helm
+    :ensure t
+    :init (helm-mode t))
+  (require 'helm-config)
+#+END_SRC
+
+*** Visual customization
+I want helm to automatically resize and appear in the current buffer
+only.
+#+BEGIN_SRC emacs-lisp
+  (setq helm-autoresize-mode 1)
+  (setq helm-split-window-in-side-p t)
+#+END_SRC
+
+*** Fuzzy matching
+Fuzzy matching works most of the time, it does seem to have the issue
+of only matching forward i.e. "machine snow" will not match with "snow
+machine".
+
+It does make it a lot easier to search through Emacs functions though
+as you only need to remember one part of the function name.
+#+BEGIN_SRC emacs-lisp
+  ;; Enable Fuzzy Matching
+  (setq helm-recentf-fuzzy-match       t
+        helm-buffers-fuzzy-matching    t
+        helm-recentf-fuzzy-match       t
+        helm-buffers-fuzzy-matching    t
+        helm-locate-fuzzy-match        t
+        helm-apropos-fuzzy-match       t
+        helm-lisp-fuzzy-completion     t
+        helm-candidate-number-limit    250)
+#+END_SRC
+
+*** Keybindings
+Above defaults overides such as =M-x= these are custom bindings.
+
+**** Self help
+The Emacs culture is to have great documentation with your functions,
+all searchable via =apropos=. Helm provides a nice interface to this,
+use it often.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-h a") 'helm-apropos)
+  (global-set-key (kbd "C-h i") 'helm-info-emacs)
+#+END_SRC
+
+**** Buffers and files
+Buffers and files are an obvious case where helm is very useful.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x b")   'helm-mini)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+  (global-set-key (kbd "M-x")     'helm-M-x)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x C-r") 'helm-recentf)
+  (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks)
+#+END_SRC
+
+**** Advanced editing
+Kill ring memory, grepping, etc, all gorgeous with helm.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-y")     'helm-show-kill-ring)
+  (global-set-key (kbd "C-x c g") 'helm-do-grep)
+  (global-set-key (kbd "C-x c o") 'helm-occur)
+#+END_SRC
+
+**** The overloaded tab key
+The good ol' =TAB= key is used for a lot, in this case I want to make
+sure that when used in helm that it completes in helm, not attempting
+to insert a snippet or something.
+#+BEGIN_SRC emacs-lisp
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+#+END_SRC
+
+Also, the following makes sure that tab works when running in terminal
+mode:
+#+BEGIN_SRC emacs-lisp
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+#+END_SRC
+
+This requires fixing the select other actions which IIRC is set to
+~C-i~ by default.
+#+BEGIN_SRC emacs-lisp
+  (define-key helm-map (kbd "C-z") 'helm-select-action)
+#+END_SRC
+
+** Company
+Auto completion of everything with nice backends.
+
+*** Installation
+Install =company= and enable it globally.
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :init (global-company-mode))
+#+END_SRC
+
+*** Adjust Delay
+Set delay for auto-completion. 0 would be too extreme and wastes CPU clocks apparently.
+#+BEGIN_SRC emacs-lisp
+  (setq company-idle-delay 0.01)
+  (setq company-minimum-prefix-length 2)
+#+END_SRC
+
+*** =yasnippet= Conflict
+Pressing tab with company mode conflicts with =yasnippets=, this is
+the only fix that I found that makes everything work as expected.
+#+BEGIN_SRC emacs-lisp
+  (defun user/check-expansion()
+    (save-excursion
+      (if (looking-at "\\_>") t
+        (backward-char 1)
+        (if (looking-at "\\.") t
+          (backward-char 1)
+          (if (looking-at "->") t nil)))))
+
+  (defun user/do-yas-expand()
+    (let ((yas-fallback-behavior 'return-nil))
+      (yas-expand)))
+
+  (defun user/tab-indent-or-complete()
+    (interactive)
+    (if (minibufferp)
+        (minibuffer-complete)
+      (if (or (not yas-minor-mode)
+              (null (user/do-yas-expand)))
+          (if (user/check-expansion)
+              (company-complete-common)
+            (indent-for-tab-command)))))
+
+  (global-set-key [tab] 'user/tab-indent-or-complete)
+#+END_SRC
+
+*** Tooltip Documentation
+Install dependency =pos-tip=.
+#+BEGIN_SRC emacs-lisp
+  (use-package pos-tip
+    :ensure t)
+  (require 'pos-tip)
+#+END_SRC
+
+Install =company-quickhelp= and set delay, FG/BG colors, max lines.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-quickhelp
+    :ensure t
+    :init
+    (company-quickhelp-mode t)
+    (setq company-quickhelp-delay 0.01)
+    (setq company-quickhelp-color-background "#272822")
+    (setq company-quickhelp-color-foreground "#F8F8F2")
+    (setq company-quickhelp-max-lines 20)
+    (setq company-quickhelp-use-propertized-text t))
+#+END_SRC
+
+*** Backend Configurations
+**** =company-math=
+Install =company-math= and add it to =company-backends=.
+
+Enable unicode symbol backend globally.
+#+BEGIN_SRC emacs-lisp
+   (use-package company-math
+     :ensure t
+     :init (add-to-list 'company-backends
+                        '(company-math-symbols-unicode)))
+#+END_SRC
+
+Enable math symbol backend only in =TeX-mode=.
+#+BEGIN_SRC emacs-lisp
+  (defun company-math-init ()
+    (setq-local company-backends
+                (append '((company-math-symbols-latex))
+                        company-backends)))
+
+  (add-hook 'TeX-mode-hook 'company-math-init)
+#+END_SRC
+
+**** =company-auctex=
+Install =company-auctex= and add it to =company-backends=. This is for =acutex= macro completion.
+Adding backends is handled by =company-auctex-init=.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-auctex
+    :ensure t
+    :init (company-auctex-init))
+#+END_SRC
+
+**** =company-yasnippet=
+Add =company-yasnippet= backend for =yasnippet= key completion.
+#+BEGIN_SRC emacs-lisp
+  (push '(company-semantic :with company-yasnippet) company-backends)
+#+END_SRC
+
+** Flycheck
+Flycheck is a modern on-the-fly syntax checking extension for GNU
+Emacs, intended as replacement for the older Flymake extension which
+is part of GNU Emacs.
+
+*** Installation
+Install =flycheck=.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+#+END_SRC
+
+*** Set C++ Standard Library
+Use =c++14= as the C++ standard.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'c++-mode-hook
+            (lambda () (progn
+                         (setq flycheck-cppcheck-standards '("c++14"))
+                         (setq flycheck-clang-language-standard "c++14")
+                         (setq flycheck-gcc-language-standard "c++14"))))
+#+END_SRC
+
+*** Set Google C++ Syntax Checker
+**** Install =flycheck-google-cpplint=
+Add Google C++ Style checker for =flycheck= (Now deprecated, using local copy).
+On Arch Linux, if using AUR package =cpplint=, need to modify command
+in =flycheck-google-cpplint.el= to use =cpplint= instead of
+=cppling.py=.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-google-cpplint
+    :load-path "local/flycheck-google-cpplint/"
+    :config
+    (eval-after-load 'flycheck
+      '(progn
+         (require 'flycheck-google-cpplint)
+         ;; Add Google C++ Style checker.
+         ;; In default, syntax checked by Clang and Cppcheck.
+         ;; Use Google Checker after errors are cleared
+         (flycheck-add-next-checker 'c/c++-cppcheck
+                                    '(error . c/c++-googlelint)))))
+#+END_SRC
+
+**** Set Checker Parameters
+Set various parameters for the checker.
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   '(flycheck-googlelint-verbose "5")
+   '(flycheck-googlelint-filter "-legal/copyright")
+   '(flycheck-googlelint-linelength "80"))
+#+END_SRC
+
+*** Set Clang Analyzer
+**** Install =flycheck-clang-analyzer=
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :init
+    (with-eval-after-load 'flycheck
+      (require 'flycheck-clang-analyzer)
+      (flycheck-clang-analyzer-setup)))
+#+END_SRC
+
+** Yasnippet
+YASnippet is a template system for Emacs. It allows you to type an
+abbreviation and automatically expand it into function templates.
+
+*** Installation
+Install =yasnippet=. Load =yasnippet= when =yas-minor-mode= is called
+and add the hook for =yas-minor-mode= for programming modes. Reload
+the snippets on start up.
+#+BEGIN_SRC emacs-lisp
+  (require 'cl)
+  (use-package yasnippet
+    :ensure t
+    :commands (yas-minor-mode)
+    :init (yas-global-mode)
+    :config (yas-reload-all))
+#+END_SRC
+
+*** Install =yasnippet-snippets=
+=yasnippet-snippets= is a collection of snippets for many langulages.
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet-snippets
     :ensure t)
 #+END_SRC
 
-** Formatting
-*** Set Link Format
+* Mode Specific
+Settings specific to a mode or defines a new mode that often
+specializes Emacs for a certain programming language.
+
+** Auctex
+=auctex= is an extensible package for writing and formatting TEX files
+in GNU Emacs.
+
+*** Installation
+Need to use =defer= as =auctex.el= does not actually provide =auctex= feature.
+#+BEGIN_SRC emacs-lisp
+  (use-package auctex
+    :defer t
+    :ensure t)
+#+END_SRC
+
+*** Automatic Parsing
+Enable =auctex= to automatically parse buffer information.
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-parse-self t)
+  (setq TeX-auto-save t)
+  (setq TeX-save-query nil)
+#+END_SRC
+
+*** Master File Detection
+Let =auctex= figure out the master file for TeX document spread over many files.
+#+BEGIN_SRC emacs-lisp
+  (setq-default TeX-master nil)
+#+END_SRC
+
+*** Spell Checking
+Spell checking with =flyspell=.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+#+END_SRC
+
+*** Enable =reftex=
+Turn on RefTeX Mode for all LaTeX files. This enables you to jump via table of contents.
+The key to invoke this is ~C-c =~.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+#+END_SRC
+
+*** Enable =LaTeX-math-mode=
+Enable LaTeX Math mode. This allows macro insertion following ~`~.
+Not exactly useful since we already have =company=.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+#+END_SRC
+
+**** Auto-complete Sub/Superscripts
+Insert braces after ~_~ or ~^~.
+#+BEGIN_SRC emacs-lisp
+  (setq TeX-electric-sub-and-superscript t)
+#+END_SRC
+
+** C/C++-mode
+*** DISABLED Default Indention
+Set default indention level to 4 and style to "linux"(do not indent braces).
+#+BEGIN_SRC emacs-lisp
+  (setq-default c-default-style "linux"
+                c-basic-offset 4)
+#+END_SRC
+
+*** Google Style
+Google's C/C++ style for c-mode.
+**** Installation
+#+BEGIN_SRC emacs-lisp
+  (use-package google-c-style
+    :ensure t
+    :init
+    (add-hook 'c-mode-common-hook 'google-set-c-style)
+    (add-hook 'c-mode-common-hook 'google-make-newline-indent))
+#+END_SRC
+
+*** Treat =.h= as C++
+Identify =.h= files as C++ files instead of C. To enable =c++-mode=
+manually, type =M-x c\+\+-mode=.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+#+END_SRC
+
+*** Clang-format
+**** Installation
+Install and set hot keys for formatting.
+#+BEGIN_SRC emacs-lisp
+  (use-package clang-format
+    :ensure t
+    :init
+    (global-set-key (kbd "C-c i") 'clang-format-region)
+    (global-set-key (kbd "C-c u") 'clang-format-buffer))
+#+END_SRC
+
+**** Set code style
+Use Google's C++ style.
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables '(clang-format-style "Google"))
+#+END_SRC
+
+** ESS
+Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such as GNU Emacs and XEmacs. It is designed to support editing of scripts and interaction with various statistical analysis programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
+#+BEGIN_SRC emacs-lisp
+  (use-package ess
+    :ensure t)
+#+END_SRC
+
+** Org-mode
+=org-mode= specific settings.
+
+*** Formatting
+**** Set Link Format
 Do not collapse the links.
 #+BEGIN_SRC emacs-lisp
   (org-toggle-link-display)
 #+END_SRC
 
-*** Subtree Indention
+**** Subtree Indention
 Do not change text indention when promoting/demoting subtrees.
 #+BEGIN_SRC emacs-lisp
   (setq org-adapt-indentation nil)
 #+END_SRC
 
-*** Truncate Lines by Default
+**** Truncate Lines by Default
 Automatically enable truncated lines when starting =org-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq-default org-startup-truncated t)
 #+END_SRC
 
-*** Turn Off =auto-fill=
+**** DISABLED Turn Off =auto-fill=
 Disable =auto-fill-mode= when in =org-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'turn-off-auto-fill)
 #+END_SRC
 
-*** Display Inline Images
+**** Display Inline Images
 Display inline images for =org-babel= execution results.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 (add-hook 'org-mode-hook 'org-display-inline-images)
 #+END_SRC
 
-** Enable spell checking
+*** Enable spell checking
 Spell checking with =flyspell-mode=. Would need to install dictionary lib like =aspell= in base system.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'flyspell-mode)
 #+END_SRC
 
-** Enable Code Evaluation
+*** Enable Code Evaluation
 Enable evaluation of various languages in org-mode.
 #+BEGIN_SRC emacs-lisp
   (defvar user/org-babel-enabled-languages
@@ -405,18 +807,18 @@ There is no need to confirm execution for these languages.
                                user/org-babel-enabled-languages)))))
 #+END_SRC
 
-** Exporter Backends
-*** HTML
+*** Exporter Backends
+**** HTML
 Do not export validation link.
 #+BEGIN_SRC emacs-lisp
   (setq org-html-validation-link nil)
 #+END_SRC
 
-*** Markdown (Blackfriday)
+**** Markdown (Blackfriday)
 An Org exporter backend that exports Org to Hugo-compatible Markdown
 (Blackfriday) and generates the front-matter (in TOML or YAML format).
 
-**** Installation
+***** Installation
 Enable =ox-hugo= as an option for exporting.
 #+BEGIN_SRC emacs-lisp
   (use-package ox-hugo
@@ -424,423 +826,16 @@ Enable =ox-hugo= as an option for exporting.
     :init (with-eval-after-load 'ox (require 'ox-hugo)))
 #+END_SRC
 
-**** Export Key Bindings
+***** Export Key Bindings
 Wrap key bindings in =<kbd>=.
 #+BEGIN_SRC emacs-lisp
   (setq org-hugo-use-code-for-kbd t)
 #+END_SRC
 
-* Helm
-Stolen from Admiral Akber's config.
-
-** Info
-Helm is incredible, it really supercharges emacs. It's a framework for
-incremental searching / completion / narrowing down options. Sounds
-simple, and it is in application, and it's so worth it.
-
-Web: [[https://emacs-helm.github.io/helm/]]
-Git: [[https://github.com/emacs-helm/helm]]
-#+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t
-    :init (helm-mode t))
-  (require 'helm-config)
-#+END_SRC
-
-** Visual customization
-I want helm to automatically resize and appear in the current buffer
-only.
-#+BEGIN_SRC emacs-lisp
-  (setq helm-autoresize-mode 1)
-  (setq helm-split-window-in-side-p t)
-#+END_SRC
-
-** Fuzzy matching
-Fuzzy matching works most of the time, it does seem to have the issue
-of only matching forward i.e. "machine snow" will not match with "snow
-machine".
-
-It does make it a lot easier to search through emacs functions though
-as you only need to remember one part of the function name.
-#+BEGIN_SRC emacs-lisp
-  ;; Enable Fuzzy Matching
-  (setq helm-recentf-fuzzy-match       t
-        helm-buffers-fuzzy-matching    t
-        helm-recentf-fuzzy-match       t
-        helm-buffers-fuzzy-matching    t
-        helm-locate-fuzzy-match        t
-        helm-apropos-fuzzy-match       t
-        helm-lisp-fuzzy-completion     t
-        helm-candidate-number-limit    250)
-#+END_SRC
-
-** Keybindings
-Above defaults overides such as =M-x= these are custom bindings.
-
-*** Self help
-The emacs culture is to have great documentation with your functions,
-all searchable via =apropos=. Helm provides a nice interface to this,
-use it often.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-h a") 'helm-apropos)
-  (global-set-key (kbd "C-h i") 'helm-info-emacs)
-#+END_SRC
-
-*** Buffers and files
-Buffers and files are an obvious case where helm is very useful.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x b")   'helm-mini)
-  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-  (global-set-key (kbd "M-x")     'helm-M-x)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-x C-r") 'helm-recentf)
-  (global-set-key (kbd "C-x r l") 'helm-filtered-bookmarks)
-#+END_SRC
-
-*** Advanced editing
-Kill ring memory, grepping, etc, all gorgeous with helm.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-y")     'helm-show-kill-ring)
-  (global-set-key (kbd "C-x c g") 'helm-do-grep)
-  (global-set-key (kbd "C-x c o") 'helm-occur)
-#+END_SRC
-
-*** The overloaded tab key
-The good ol' =TAB= key is used for a lot, in this case I want to make
-sure that when used in helm that it completes in helm, not attempting
-to insert a snippet or something.
-#+BEGIN_SRC emacs-lisp
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-#+END_SRC
-
-Also, the following makes sure that tab works when running in terminal
-mode:
-#+BEGIN_SRC emacs-lisp
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-#+END_SRC
-
-This requires fixing the select other actions which IIRC is set to
-~C-i~ by default.
-#+BEGIN_SRC emacs-lisp
-  (define-key helm-map (kbd "C-z") 'helm-select-action)
-#+END_SRC
-
-* Auctex
-=auctex= is an extensible package for writing and formatting TEX files
-in GNU Emacs.
-
-** Installation
-Need to use =defer= as =auctex.el= does not actually provide =auctex= feature.
-#+BEGIN_SRC emacs-lisp
-  (use-package auctex
-    :defer t
-    :ensure t)
-#+END_SRC
-
-** Automatic Parsing
-Enable =auctex= to automatically parse buffer information.
-#+BEGIN_SRC emacs-lisp
-  (setq TeX-parse-self t)
-  (setq TeX-auto-save t)
-  (setq TeX-save-query nil)
-#+END_SRC
-
-** Master File Detection
-Let =auctex= figure out the master file for TeX document spread over many files.
-#+BEGIN_SRC emacs-lisp
-  (setq-default TeX-master nil)
-#+END_SRC
-
-** Spell Checking
-Spell checking with =flyspell=.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-#+END_SRC
-
-** Enable =reftex=
-Turn on RefTeX Mode for all LaTeX files. This enables you to jump via table of contents.
-The key to invoke this is ~C-c =~.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-#+END_SRC
-
-** Enable =LaTeX-math-mode=
-Enable LaTeX Math mode. This allows macro insertion following ~`~.
-Not exactly useful since we already have =company=.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-#+END_SRC
-
-*** Auto-complete Sub/Superscripts
-Insert braces after ~_~ or ~^~.
-#+BEGIN_SRC emacs-lisp
-  (setq TeX-electric-sub-and-superscript t)
-#+END_SRC
-
-* CC Mode
-** DISABLED Default Indention
-Set default indention level to 4 and style to "linux"(do not indent braces).
-#+BEGIN_SRC emacs-lisp
-  (setq-default c-default-style "linux"
-                c-basic-offset 4)
-#+END_SRC
-
-** Google Style
-Google's C/C++ style for c-mode.
-*** Installation
-#+BEGIN_SRC emacs-lisp
-  (use-package google-c-style
-    :ensure t
-    :init
-    (add-hook 'c-mode-common-hook 'google-set-c-style)
-    (add-hook 'c-mode-common-hook 'google-make-newline-indent))
-#+END_SRC
-
-** Treat =.h= as C++
-Identify =.h= files as C++ files instead of C. To enable =c++-mode=
-manually, type =M-x c\+\+-mode=.
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-#+END_SRC
-
-* Flycheck
-Flycheck is a modern on-the-fly syntax checking extension for GNU
-Emacs, intended as replacement for the older Flymake extension which
-is part of GNU Emacs.
-
-** Installation
-Install =flycheck=.
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck
-    :ensure t
-    :init (global-flycheck-mode))
-#+END_SRC
-
-** Set C++ Standard Library
-Use =c++14= as the C++ standard.
-#+BEGIN_SRC emacs-lisp
-  (add-hook 'c++-mode-hook
-            (lambda () (progn
-                         (setq flycheck-cppcheck-standards '("c++14"))
-                         (setq flycheck-clang-language-standard "c++14")
-                         (setq flycheck-gcc-language-standard "c++14"))))
-#+END_SRC
-
-** Set Google C++ Syntax Checker
-*** Install =flycheck-google-cpplint=
-Add Google C++ Style checker for =flycheck= (Now deprecated, using local copy).
-On Arch Linux, if using AUR package =cpplint=, need to modify command
-in =flycheck-google-cpplint.el= to use =cpplint= instead of
-=cppling.py=.
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck-google-cpplint
-    :load-path "local/flycheck-google-cpplint/"
-    :config
-    (eval-after-load 'flycheck
-      '(progn
-         (require 'flycheck-google-cpplint)
-         ;; Add Google C++ Style checker.
-         ;; In default, syntax checked by Clang and Cppcheck.
-         ;; Use Google Checker after errors are cleared
-         (flycheck-add-next-checker 'c/c++-cppcheck
-                                    '(error . c/c++-googlelint)))))
-#+END_SRC
-
-*** Set Checker Parameters
-Set various parameters for the checker.
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-   '(flycheck-googlelint-verbose "5")
-   '(flycheck-googlelint-filter "-legal/copyright")
-   '(flycheck-googlelint-linelength "80"))
-#+END_SRC
-
-** Set Clang Analyzer
-*** Install =flycheck-clang-analyzer=
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck-clang-analyzer
-    :ensure t
-    :init
-    (with-eval-after-load 'flycheck
-      (require 'flycheck-clang-analyzer)
-      (flycheck-clang-analyzer-setup)))
-#+END_SRC
-
-* Yasnippet
-YASnippet is a template system for Emacs. It allows you to type an
-abbreviation and automatically expand it into function templates.
-
-** Installation
-Install =yasnippet=. Load =yasnippet= when =yas-minor-mode= is called
-and add the hook for =yas-minor-mode= for programming modes. Reload
-the snippets on start up.
-#+BEGIN_SRC emacs-lisp
-  (require 'cl)
-  (use-package yasnippet
-    :ensure t
-    :commands (yas-minor-mode)
-    :init (yas-global-mode)
-    :config (yas-reload-all))
-#+END_SRC
-
-** Install =yasnippet-snippets=
-=yasnippet-snippets= is a collection of snippets for many langulages.
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet-snippets
-    :ensure t)
-#+END_SRC
-
-* Company
-Auto completion of everything with nice backends.
-
-** Installation
-Install =company= and enable it globally.
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :init (global-company-mode))
-#+END_SRC
-
-** Adjust Delay
-Set delay for auto-completion. 0 would be too extreme and wastes CPU clocks apparently.
-#+BEGIN_SRC emacs-lisp
-  (setq company-idle-delay 0.01)
-  (setq company-minimum-prefix-length 2)
-#+END_SRC
-
-** =yasnippet= Conflict
-Pressing tab with company mode conflicts with =yasnippets=, this is
-the only fix that I found that makes everything work as expected.
-#+BEGIN_SRC emacs-lisp
-  (defun check-expansion ()
-    (save-excursion
-      (if (looking-at "\\_>") t
-        (backward-char 1)
-        (if (looking-at "\\.") t
-          (backward-char 1)
-          (if (looking-at "->") t nil)))))
-
-  (defun do-yas-expand ()
-    (let ((yas/fallback-behavior 'return-nil))
-      (yas/expand)))
-
-  (defun tab-indent-or-complete ()
-    (interactive)
-    (if (minibufferp)
-        (minibuffer-complete)
-      (if (or (not yas/minor-mode)
-              (null (do-yas-expand)))
-          (if (check-expansion)
-              (company-complete-common)
-            (indent-for-tab-command)))))
-
-
-  (global-set-key [tab] 'tab-indent-or-complete)
-#+END_SRC
-
-** Tooltip Documentation
-Install dependency =pos-tip=.
-#+BEGIN_SRC emacs-lisp
-  (use-package pos-tip
-    :ensure t)
-  (require 'pos-tip)
-#+END_SRC
-
-Install =company-quickhelp= and set delay, FG/BG colors, max lines.
-#+BEGIN_SRC emacs-lisp
-  (use-package company-quickhelp
-    :ensure t
-    :init
-    (company-quickhelp-mode t)
-    (setq company-quickhelp-delay 0.01)
-    (setq company-quickhelp-color-background "#272822")
-    (setq company-quickhelp-color-foreground "#F8F8F2")
-    (setq company-quickhelp-max-lines 20)
-    (setq company-quickhelp-use-propertized-text t))
-#+END_SRC
-
-** Backend Configurations
-*** =company-math=
-Install =company-math= and add it to =company-backends=.
-
-Enable unicode symbol backend globally.
-#+BEGIN_SRC emacs-lisp
-   (use-package company-math
-     :ensure t
-     :init (add-to-list 'company-backends
-                        '(company-math-symbols-unicode)))
-#+END_SRC
-
-Enable math symbol backend only in =TeX-mode=.
-#+BEGIN_SRC emacs-lisp
-  (defun company-math-init ()
-    (setq-local company-backends
-                (append '((company-math-symbols-latex))
-                        company-backends)))
-
-  (add-hook 'TeX-mode-hook 'company-math-init)
-#+END_SRC
-
-*** =company-auctex=
-Install =company-auctex= and add it to =company-backends=. This is for =acutex= macro completion.
-Adding backends is handled by =company-auctex-init=.
-#+BEGIN_SRC emacs-lisp
-  (use-package company-auctex
-    :ensure t
-    :init (company-auctex-init))
-#+END_SRC
-
-*** =company-yasnippet=
-Add =company-yasnippet= backend for =yasnippet= key completion.
-#+BEGIN_SRC emacs-lisp
-  (push '(company-semantic :with company-yasnippet) company-backends)
-#+END_SRC
-
-* Projectile
-Projectile is a project interaction library for Emacs. Its goal is to
-provide a nice set of features operating on a project level without
-introducing external dependencies(when feasible).
-
-** Installation
-Install =projectile=.
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :init
-    (projectile-global-mode))
-#+END_SRC
-
-** Enable =helm= support
-Since I use =helm=, I need to install additional support.
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-projectile
-    :ensure t
-    :init
-    (setq projectile-completion-system 'helm)
-    (helm-projectile-on))
-#+END_SRC
-
-* Clang-format
-** Installation
-Install and set hot keys for formatting.
-#+BEGIN_SRC emacs-lisp
-  (use-package clang-format
-    :ensure t
-    :init
-    (global-set-key (kbd "C-c i") 'clang-format-region)
-    (global-set-key (kbd "C-c u") 'clang-format-buffer))
-#+END_SRC
-
-** Set code style
-Use Google's C++ style.
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables '(clang-format-style "Google"))
-#+END_SRC
-
-* Rust-mode
+** Rust-mode
 A compilation of settings for programming in rust.
 
-** Rust-mode
+*** Rust-mode
 Install =rust-mode=, use =rust-fmt= to format the code upon saving,
 and automatically enable =rust-mode= for =*.rs= files.
 #+BEGIN_SRC emacs-lisp
@@ -852,7 +847,7 @@ and automatically enable =rust-mode= for =*.rs= files.
   )
 #+END_SRC
 
-** Flycheck Support
+*** Flycheck Support
 Better flycheck support via =flycheck-rust=.
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck-rust
