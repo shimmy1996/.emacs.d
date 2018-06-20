@@ -8,23 +8,19 @@ in an hopefully understandable manner. I went from using multiple
 =.org= files back to a single one because =org-mode= is fantastic and
 my config is not too complicated for a single file to handle (yet).
 
-Here's a short description for each module.
-| Module           | Notes                       |
+| Module           | Function                    |
 |------------------+-----------------------------|
 | [[Packages]]     | Package management.         |
 | [[Aesthetics]]   | UI and theme.               |
+| [[Enhancements]] | Plug-and-play enhancements. |
 | [[Org-mode]]     | Org-mode settings.          |
 | [[Helm]]         | Minibuffer auto-completion. |
 | [[Auctex]]       | Latex settings.             |
-| [[Ox-hugo]]      | =hugo= exporter.            |
-| [[Magit]]        | Git interface.              |
 | [[CC Mode]]      | CC mode.                    |
 | [[Flycheck]]     | Syntax checking.            |
 | [[Yasnippet]]    | Snippet templates.          |
 | [[Company]]      | Buffer auto-completion.     |
-| [[ESS]]          | Emacs Speaks Statistics.    |
 | [[Projectile]]   | Project management.         |
-| [[Keyfreq]]      | Record command frequency.   |
 | [[Clang-format]] | Format C++ source code.     |
 | [[Rust-mode]]    | Settings for rust.          |
 
@@ -46,10 +42,9 @@ Initialize Emacs Package Manager and add repositories.
 #+END_SRC
 
 ** Setup =use-package=
-Setup =use-package= so that package requirements can be handled in separate
+Bootstrap =use-package= so that package requirements can be handled in separate
 sections.
 #+BEGIN_SRC emacs-lisp
-  ;; Bootstrap `use-package'
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
@@ -77,82 +72,6 @@ Save customized settings in a separate file than =init.el=. Create the customiza
   (unless (file-exists-p custom-file)
     (write-region "" "" custom-file))
   (load custom-file)
-#+END_SRC
-
-** Dashboard Customization
-An extensible emacs startup screen showing you what’s most important.
-
-*** Installation
-Change default startup screen with =dashboard=.
-Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
-Also refresh dashboard to ensure customizations take effect.
-#+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq initial-buffer-choice (lambda()
-                                  (dashboard-refresh-buffer)
-                                  (get-buffer "*dashboard*"))))
-#+END_SRC
-
-*** Customize Banner and Logo
-Customize banner and logo.
-#+BEGIN_SRC emacs-lisp
-  (defvar user/dashboard-banner-logo-titles
-    '("42"
-      "9 MORE SEASONS UNTIL I GET THAT DIPPING SZECHUAN SAUCE!"
-      "Execute order 66."
-      "Greetings from Emacs!"
-      "Project-iM@CS"
-      "Weak emperors mean strong viceroys."
-      "Wubba Lubba Dub-Dub!"))
-  (setq dashboard-banner-logo-title
-        (elt user/dashboard-banner-logo-titles
-             (random (length user/dashboard-banner-logo-titles))))
-  (setq dashboard-startup-banner
-        (expand-file-name "static/sxs.png" user-emacs-directory))
-#+END_SRC
-
-*** Customize Widgets
-**** =dashboard-insert-configs=
-Create widget to display important config files. Use ~c~ to jump to this section.
-#+BEGIN_SRC emacs-lisp
-  (defvar user/config-file-list
-    (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
-            '("README.org"
-              "init.el")))
-
-  (defun user/dashboard-insert-configs (list-size)
-    "Add a list of config files."
-    (when (dashboard-insert-recentf-list
-           "Config Files:"
-           (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
-      (dashboard-insert-shortcut "c" "Config Files:")))
-
-  (add-to-list 'dashboard-item-generators '(configs . user/dashboard-insert-configs))
-#+END_SRC
-
-**** =dashboard-insert-init-time=
-Display initialization time.
-#+BEGIN_SRC emacs-lisp
-  (defun user/dashboard-insert-init-time (list-size)
-     "Displays emacs init time."
-     (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
-
-  (add-to-list 'dashboard-item-generators '(init-time . user/dashboard-insert-init-time))
-#+END_SRC
-
-**** Apply All Widgets
-Set items to display:
-#+BEGIN_SRC emacs-lisp
-  (setq dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 8)
-  ;                        (agenda . 5)
-  ;                        (registers . 5)
-                          (configs)
-                          (init-time)))
 #+END_SRC
 
 ** Fcitx
@@ -296,37 +215,161 @@ Use mouse wheel to adjust zoom level.
   (global-set-key [C-mouse-5] 'text-scale-decrease)
 #+END_SRC
 
+* Enhancements
+Packages providing enhancements to emacs interface. Mostly simple
+plug-and-play packages.
+
+** Dashboard
+An extensible emacs startup screen showing you what’s most important.
+
+*** Installation
+Change default startup screen with =dashboard=.
+Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
+Also refresh dashboard to ensure customizations take effect.
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda()
+                                  (dashboard-refresh-buffer)
+                                  (get-buffer "*dashboard*"))))
+#+END_SRC
+
+*** Customize Banner and Logo
+Customize banner and logo.
+#+BEGIN_SRC emacs-lisp
+  (defvar user/dashboard-banner-logo-titles
+    '("42"
+      "9 MORE SEASONS UNTIL I GET THAT DIPPING SZECHUAN SAUCE!"
+      "Execute order 66."
+      "Greetings from Emacs!"
+      "Project-iM@CS"
+      "Weak emperors mean strong viceroys."
+      "Wubba Lubba Dub-Dub!"))
+  (setq dashboard-banner-logo-title
+        (elt user/dashboard-banner-logo-titles
+             (random (length user/dashboard-banner-logo-titles))))
+  (setq dashboard-startup-banner
+        (expand-file-name "static/sxs.png" user-emacs-directory))
+#+END_SRC
+
+*** Customize Widgets
+**** =dashboard-insert-configs=
+Create widget to display important config files. Use ~c~ to jump to this section.
+#+BEGIN_SRC emacs-lisp
+  (defvar user/config-file-list
+    (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
+            '("README.org"
+              "init.el")))
+
+  (defun user/dashboard-insert-configs (list-size)
+    "Add a list of config files."
+    (when (dashboard-insert-recentf-list
+           "Config Files:"
+           (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
+      (dashboard-insert-shortcut "c" "Config Files:")))
+
+  (add-to-list 'dashboard-item-generators '(configs . user/dashboard-insert-configs))
+#+END_SRC
+
+**** =dashboard-insert-init-time=
+Display initialization time.
+#+BEGIN_SRC emacs-lisp
+  (defun user/dashboard-insert-init-time (list-size)
+     "Displays emacs init time."
+     (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
+
+  (add-to-list 'dashboard-item-generators '(init-time . user/dashboard-insert-init-time))
+#+END_SRC
+
+**** Apply All Widgets
+Set items to display:
+#+BEGIN_SRC emacs-lisp
+  (setq dashboard-items '((recents  . 5)
+                          (bookmarks . 5)
+                          (projects . 8)
+  ;                        (agenda . 5)
+  ;                        (registers . 5)
+                          (configs)
+                          (init-time)))
+#+END_SRC
+
+** ESS
+Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such as GNU Emacs and XEmacs. It is designed to support editing of scripts and interaction with various statistical analysis programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
+#+BEGIN_SRC emacs-lisp
+  (use-package ess
+    :ensure t)
+#+END_SRC
+
+** HTML Export
+Convert buffer text and decorations to HTML by =htmlize-buffer= so
+that people can see what I see.
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+END_SRC
+
+** Keyfreq
+Records command frequency. I am planning on adjusting my keyboard
+layout with this information.
+#+BEGIN_SRC emacs-lisp
+    (use-package keyfreq
+      :ensure t
+      :init
+      (keyfreq-mode 1)
+      (keyfreq-autosave-mode 1))
+#+END_SRC
+
+** Magit
+Install =magit= and bind =magit-status= to ~C-c g~.
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :init
+    (global-set-key (kbd "C-c g") 'magit-status))
+#+END_SRC
+
 * Org-mode
-Mostly formatting settings in =org-mode=.
+=org-mode= specific settings.
+
 ** Installation
-=org= mode comes bundled, but we still need to load it.
+Org comes bundled, but we still need to load it.
 #+BEGIN_SRC emacs-lisp
   (use-package org
     :ensure t)
 #+END_SRC
 
-** Set Link Format
+** Formatting
+*** Set Link Format
 Do not collapse the links.
 #+BEGIN_SRC emacs-lisp
   (org-toggle-link-display)
 #+END_SRC
 
-** Subtree Indention
+*** Subtree Indention
 Do not change text indention when promoting/demoting subtrees.
 #+BEGIN_SRC emacs-lisp
   (setq org-adapt-indentation nil)
 #+END_SRC
 
-** Truncate Lines by Default
+*** Truncate Lines by Default
 Automatically enable truncated lines when starting =org-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq-default org-startup-truncated t)
 #+END_SRC
 
-** Turn Off =auto-fill=
+*** Turn Off =auto-fill=
 Disable =auto-fill-mode= when in =org-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'turn-off-auto-fill)
+#+END_SRC
+
+*** Display Inline Images
+Display inline images for =org-babel= execution results.
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+(add-hook 'org-mode-hook 'org-display-inline-images)
 #+END_SRC
 
 ** Enable spell checking
@@ -334,18 +377,8 @@ Spell checking with =flyspell-mode=. Would need to install dictionary lib like =
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'flyspell-mode)
 #+END_SRC
-** Install HTML Export Support
-Need to install =htmlize=.
-#+BEGIN_SRC emacs-lisp
-  (use-package htmlize
-    :ensure t)
-#+END_SRC
 
-Do not export validation link.
-#+BEGIN_SRC emacs-lisp
-  (setq org-html-validation-link nil)
-#+END_SRC
-** Enable Evaluation
+** Enable Code Evaluation
 Enable evaluation of various languages in org-mode.
 #+BEGIN_SRC emacs-lisp
   (defvar user/org-babel-enabled-languages
@@ -354,6 +387,7 @@ Enable evaluation of various languages in org-mode.
       R
       org)
     "Extra languages user can execute in org-babel code blocks.")
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    (mapcar
@@ -370,11 +404,29 @@ There is no need to confirm execution for these languages.
                                user/org-babel-enabled-languages)))))
 #+END_SRC
 
-** Display Inline Images
-Display inline images for =org-babel= execution results.
+** Exporter Backends
+*** HTML
+Do not export validation link.
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
-(add-hook 'org-mode-hook 'org-display-inline-images)
+  (setq org-html-validation-link nil)
+#+END_SRC
+
+*** Markdown (Blackfriday)
+An Org exporter backend that exports Org to Hugo-compatible Markdown
+(Blackfriday) and generates the front-matter (in TOML or YAML format).
+
+**** Installation
+Enable =ox-hugo= as an option for exporting.
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-hugo
+    :ensure t
+    :init (with-eval-after-load 'ox (require 'ox-hugo)))
+#+END_SRC
+
+**** Export Key Bindings
+Wrap key bindings in =<kbd>=.
+#+BEGIN_SRC emacs-lisp
+  (setq org-hugo-use-code-for-kbd t)
 #+END_SRC
 
 * Helm
@@ -473,7 +525,8 @@ This requires fixing the select other actions which IIRC is set to
 #+END_SRC
 
 * Auctex
-=auctex= is an extensible package for writing and formatting TEX files in GNU Emacs.
+=auctex= is an extensible package for writing and formatting TEX files
+in GNU Emacs.
 
 ** Installation
 Need to use =defer= as =auctex.el= does not actually provide =auctex= feature.
@@ -521,39 +574,6 @@ Not exactly useful since we already have =company=.
 Insert braces after ~_~ or ~^~.
 #+BEGIN_SRC emacs-lisp
   (setq TeX-electric-sub-and-superscript t)
-#+END_SRC
-
-* Ox-hugo
-Exporter from =org-mode= to =hugo=.
-
-** Installation
-Enable =ox-hugo= as an option for exporting.
-#+BEGIN_SRC emacs-lisp
-  (use-package ox-hugo
-    :ensure t
-    :init (with-eval-after-load 'ox (require 'ox-hugo)))
-#+END_SRC
-
-** Export Key Bindings
-Wrap key bindings in =<kbd>=.
-#+BEGIN_SRC emacs-lisp
-  (setq org-hugo-use-code-for-kbd t)
-#+END_SRC
-
-* Magit
-Great git interface.
-
-** Installation
-Install =magit=.
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t)
-#+END_SRC
-
-** Key Binding
-Set hot key for =magit-status=.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-c g") 'magit-status)
 #+END_SRC
 
 * CC Mode
@@ -775,16 +795,6 @@ Add =company-yasnippet= backend for =yasnippet= key completion.
   (push '(company-semantic :with company-yasnippet) company-backends)
 #+END_SRC
 
-* ESS
-Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such as GNU Emacs and XEmacs. It is designed to support editing of scripts and interaction with various statistical analysis programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
-
-** Installation
-Install ESS.
-#+BEGIN_SRC emacs-lisp
-  (use-package ess
-    :ensure t)
-#+END_SRC
-
 * Projectile
 Projectile is a project interaction library for Emacs. Its goal is to
 provide a nice set of features operating on a project level without
@@ -807,20 +817,6 @@ Since I use =helm=, I need to install additional support.
     :init
     (setq projectile-completion-system 'helm)
     (helm-projectile-on))
-#+END_SRC
-
-* Keyfreq
-Records command frequency. I am planning on adjusting my keyboard
-layout with this information.
-
-** Installation
-Install =keyfreq=.
-#+BEGIN_SRC emacs-lisp
-    (use-package keyfreq
-      :ensure t
-      :init
-      (keyfreq-mode 1)
-      (keyfreq-autosave-mode 1))
 #+END_SRC
 
 * Clang-format
