@@ -451,6 +451,8 @@ Swiper, an Ivy-enhanced alternative to isearch.
     (setq ivy-use-virtual-buffers t)
     ;; Use Enter to navigate into the directory, not open it with dired.
     (define-key ivy-minibuffer-map (kbd "C-m") 'ivy-alt-done)
+    ;; Use C-l to go back one level.
+    (define-key ivy-minibuffer-map (kbd "C-l") 'ivy-backward-delete-char)
     :bind
     (("C-s"     . swiper)
      ("M-x"     . counsel-M-x)
