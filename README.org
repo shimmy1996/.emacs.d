@@ -60,12 +60,12 @@ Highlight portions of line over 80 characters in =prog-mode=.
 #+END_SRC
 
 ** Color Themes
-Install =base16-theme= and enable gruvbox dark medium.
+Install =base16-theme= and enable gruvbox dark pale.
 #+BEGIN_SRC emacs-lisp
     (use-package base16-theme
       :ensure t
       :config
-      (load-theme 'base16-gruvbox-dark-medium t))
+      (load-theme 'base16-gruvbox-dark-pale t))
 #+END_SRC
 
 ** Customize Settings in Separate File
