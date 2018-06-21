@@ -456,6 +456,8 @@ Swiper, an Ivy-enhanced alternative to isearch.
      ("M-x"     . counsel-M-x)
      ("M-y"     . counsel-yank-pop)
      ("C-x C-f" . counsel-find-file)
+     ("C-x r b" . counsel-bookmark)
+     ("C-h a"   . counsel-apropos)
      ("C-h f"   . counsel-describe-function)
      ("C-h v"   . counsel-describe-variable)
      ("C-h l"   . counsel-find-library)
@@ -470,8 +472,6 @@ Integration with =magit= and =projectile=.
 #+BEGIN_SRC emacs-lisp
   (setq magit-completing-read-function 'ivy-completing-read)
   (setq projectile-completion-system 'ivy)
-#+END_SRC
-
 #+END_SRC
 
 ** DISABLED Helm
