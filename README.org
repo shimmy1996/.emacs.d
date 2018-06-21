@@ -376,6 +376,7 @@ that people can see what I see.
 
 ** Keybindings
 *** IBuffer
+Use =ibuffer= instead of =list-buffer=.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   (autoload 'ibuffer "ibuffer" "List buffers." t)
@@ -440,25 +441,37 @@ Swiper, an Ivy-enhanced alternative to isearch.
 
 *** Installation
 #+BEGIN_SRC emacs-lisp
-      (use-package ivy
-        :ensure t
-        :init
-        (setq enable-recursive-minibuffers t)
-        :config
-        (ivy-mode 1)
-        (setq ivy-use-virtual-buffers t)
-        :bind
-        (("C-s"     . swiper)
-         ("M-x"     . counsel-M-x)
-         ("M-y"     . counsel-yank-pop)
-         ("C-x C-f" . counsel-find-file)
-         ("C-h f"   . counsel-describe-function)
-         ("C-h v"   . counsel-describe-variable)
-         ("C-h l"   . counsel-find-library)
-         ("C-h b"   . counsel-descbinds)
-         ("C-h i"   . counsel-info-lookup-symbol)
-         ("<f2> u"  . counsel-unicode-char)
-         ("C-c C-r" . ivy-resume)))
+  (use-package ivy
+    :ensure t
+    :init
+    (setq enable-recursive-minibuffers t)
+    (ivy-mode 1)
+    :config
+    ;; Show recents and bookmarks in find-file.
+    (setq ivy-use-virtual-buffers t)
+    ;; Use Enter to navigate into the directory, not open it with dired.
+    (define-key ivy-minibuffer-map (kbd "C-m") 'ivy-alt-done)
+    :bind
+    (("C-s"     . swiper)
+     ("M-x"     . counsel-M-x)
+     ("M-y"     . counsel-yank-pop)
+     ("C-x C-f" . counsel-find-file)
+     ("C-h f"   . counsel-describe-function)
+     ("C-h v"   . counsel-describe-variable)
+     ("C-h l"   . counsel-find-library)
+     ("C-h b"   . counsel-descbinds)
+     ("C-h i"   . counsel-info-lookup-symbol)
+     ("<f2> u"  . counsel-unicode-char)
+     ("C-c C-r" . ivy-resume)))
+#+END_SRC
+
+*** Integration
+Integration with =magit= and =projectile=.
+#+BEGIN_SRC emacs-lisp
+  (setq magit-completing-read-function 'ivy-completing-read)
+  (setq projectile-completion-system 'ivy)
+#+END_SRC
+
 #+END_SRC
 
 ** DISABLED Helm
