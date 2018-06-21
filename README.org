@@ -45,6 +45,20 @@ sections.
 * Aesthetics
 Mostly aesthetics and quality of life changes.
 
+** 80 Character Limit
+Set =fill-column= to 80 characters.
+#+BEGIN_SRC emacs-lisp
+  (setq-default fill-column 80)
+#+END_SRC
+
+Highlight portions of line over 80 characters in =prog-mode=.
+#+BEGIN_SRC emacs-lisp
+  (require 'whitespace)
+  (setq whitespace-line-column 80)
+  (setq whitespace-style '(face empty tabs lines-tail trailing))
+  (add-hook 'prog-mode-hook 'whitespace-mode)
+#+END_SRC
+
 ** Color Themes
 Install =base16-theme=.
 #+BEGIN_SRC emacs-lisp
@@ -87,15 +101,6 @@ If using Emacs daemon with =systemd=, remember to add to the
 It would also help to change the default command for =emacs= into:
 #+BEGIN_SRC sh
   emacsclient -c -a emacs
-#+END_SRC
-
-** Highlight Lines Over 80
-Highlight portions of line over 80 characters in =prog-mode=.
-#+BEGIN_SRC emacs-lisp
-  (require 'whitespace)
-  (setq whitespace-line-column 80)
-  (setq whitespace-style '(face empty tabs lines-tail trailing))
-  (add-hook 'prog-mode-hook 'whitespace-mode)
 #+END_SRC
 
 ** Line Highlighting
