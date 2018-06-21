@@ -157,6 +157,11 @@ Save =*~= backups in =$(pwd)/.bak=.
         )
 #+END_SRC
 
+** Show Column Number
+#+BEGIN_SRC emacs-lisp
+  (column-number-mode)
+#+END_SRC
+
 ** UI Settings
 *** *bars
 Hide menu, scrollbar and toolbars.
