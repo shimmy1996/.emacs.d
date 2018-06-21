@@ -159,7 +159,7 @@ Save =*~= backups in =$(pwd)/.bak=.
 
 ** Show Column Number
 #+BEGIN_SRC emacs-lisp
-  (column-number-mode)
+  (setq column-number-mode t)
 #+END_SRC
 
 ** UI Settings
