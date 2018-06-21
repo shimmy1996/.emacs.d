@@ -288,7 +288,7 @@ Use mouse wheel to adjust zoom level.
 
 * Enhancements
 Packages providing enhancements to Emacs interface. Mostly simple
-plug-and-play packages.
+plug-and-play packages or keybinding changes.
 
 ** Dashboard
 An extensible Emacs startup screen showing you what’s most important.
@@ -374,6 +374,12 @@ that people can see what I see.
     :ensure t)
 #+END_SRC
 
+** Keybindings
+*** IBuffer
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (autoload 'ibuffer "ibuffer" "List buffers." t)
+#+END_SRC
 ** Keyfreq
 Records command frequency. I am planning on adjusting my keyboard
 layout with this information.
@@ -408,7 +414,7 @@ Install =projectile=.
     (projectile-global-mode))
 #+END_SRC
 
-*** Enable =helm= support
+*** DISABLED Enable =helm= support
 Since I use =helm=, I need to install additional support.
 #+BEGIN_SRC emacs-lisp
   (use-package helm-projectile
@@ -425,10 +431,40 @@ configurations is a lot more complex and may be spread out, any
 subtree that depends on packages in this section will have a tag to
 mark the dependency.
 
-** Helm
+** Ivy
+Flexible, simple tools for minibuffer completion in Emacs.
+
+Ivy, a generic completion mechanism for Emacs.
+Counsel, a collection of Ivy-enhanced versions of common Emacs commands.
+Swiper, an Ivy-enhanced alternative to isearch.
+
+*** Installation
+#+BEGIN_SRC emacs-lisp
+      (use-package ivy
+        :ensure t
+        :init
+        (setq enable-recursive-minibuffers t)
+        :config
+        (ivy-mode 1)
+        (setq ivy-use-virtual-buffers t)
+        :bind
+        (("C-s"     . swiper)
+         ("M-x"     . counsel-M-x)
+         ("M-y"     . counsel-yank-pop)
+         ("C-x C-f" . counsel-find-file)
+         ("C-h f"   . counsel-describe-function)
+         ("C-h v"   . counsel-describe-variable)
+         ("C-h l"   . counsel-find-library)
+         ("C-h b"   . counsel-descbinds)
+         ("C-h i"   . counsel-info-lookup-symbol)
+         ("<f2> u"  . counsel-unicode-char)
+         ("C-c C-r" . ivy-resume)))
+#+END_SRC
+
+** DISABLED Helm
 Stolen from Admiral Akber's config.
 
-*** Info
+*** Install
 Helm is incredible, it really supercharges emacs. It's a framework for
 incremental searching / completion / narrowing down options. Sounds
 simple, and it is in application, and it's so worth it.
