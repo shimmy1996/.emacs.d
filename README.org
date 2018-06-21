@@ -782,6 +782,12 @@ Display inline images for =org-babel= execution results.
 (add-hook 'org-mode-hook 'org-display-inline-images)
 #+END_SRC
 
+**** Protect Folded Regions
+Don't allow editing of folded regions
+#+BEGIN_SRC emacs-lisp
+  (setq org-catch-invisible-edits 'error)
+#+END_SRC
+
 *** Enable spell checking
 Spell checking with =flyspell-mode=. Would need to install dictionary lib like =aspell= in base system.
 #+BEGIN_SRC emacs-lisp
