@@ -551,7 +551,14 @@ Adding backends is handled by =company-auctex-init=.
 **** =company-yasnippet=
 Add =company-yasnippet= backend for =yasnippet= key completion.
 #+BEGIN_SRC emacs-lisp
-  (push '(company-semantic :with company-yasnippet) company-backends)
+  (defun user/enable-yas-for-backend (backend)
+    "Add yasnippet support for specified BACKEND."
+    (if (and (listp backend) (member 'company-yasnippet backend))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+  ;; Enable for all backends.
+  (setq company-backends (mapcar #'user/enable-yas-for-backend company-backends))
 #+END_SRC
 
 ** Flycheck
