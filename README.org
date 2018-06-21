@@ -511,8 +511,8 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
     :init
     (company-quickhelp-mode t)
     (setq company-quickhelp-delay 0.01)
-    (setq company-quickhelp-color-background "#272822")
-    (setq company-quickhelp-color-foreground "#F8F8F2")
+    (setq company-quickhelp-color-background "#262626")
+    (setq company-quickhelp-color-foreground "#ebdbb2")
     (setq company-quickhelp-max-lines 20)
     (setq company-quickhelp-use-propertized-text t))
 #+END_SRC
