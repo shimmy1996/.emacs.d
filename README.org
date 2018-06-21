@@ -493,7 +493,7 @@ the only fix that I found that makes everything work as expected.
               (company-complete-common)
             (indent-for-tab-command)))))
 
-  (global-set-key [tab] 'user/tab-indent-or-complete)
+  (global-set-key (kbd "TAB") 'user/tab-indent-or-complete)
 #+END_SRC
 
 *** Tooltip Documentation
