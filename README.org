@@ -127,7 +127,7 @@ characters. I tried to add something similar for Unicode fonts, but found that
 they don't have uniform width anyways (not to mention that not all of them are
 full-width), rendering this method useless.
 
-I think CJK fonts has less granular sizing controls, i.e. the actual glyph size
+I think CJK fonts have less granular sizing controls, i.e. the actual glyph size
 of size 16 and size 17 are in fact the same and only starts actually increasing
 after we hit size 18.
 
@@ -150,9 +150,12 @@ scratch. This is because =emacsclient= seems to have a different dynamic when
 creating =startup-fontset= and no other method guarantees consistent behavior
 between =emacs= and =emacsclient=.
 
+Use ~C-u C-x =~ to examine the font used for a specific character and use
+=describe-fontset= to check if our changes went through.
+
 #+BEGIN_SRC emacs-lisp
-  ;; Enable font customization for charset symbols.  This charset contains
-  ;; puncuation marks, emoji, etc.
+  ;; Enable font customization for charset 'symbols, which contains puncuation
+  ;; marks, emoji, etc.
   (setq use-default-font-for-symbols nil)
 
   (defun user/set-font ()
@@ -172,8 +175,9 @@ between =emacs= and =emacsclient=.
                         (font-spec :family user/cjk-font)
                         nil 'prepend))
     ;; Special settings for certain CJK puncuation marks.
-    (dolist (charset '((#x2018 . #x2019)    ;; CJK single quotes
-                       (#x201c . #x201d)))  ;; CJK double quotes
+    ;; These are full-width characters but by default uses half-width glyphs.
+    (dolist (charset '((#x2018 . #x2019)    ;; CJK single quotes "‘’"
+                       (#x201c . #x201d)))  ;; CJK double quotes "“”"
       (set-fontset-font user/standard-fontset charset
                         (font-spec :family user/cjk-font)
                         nil 'prepend)))
