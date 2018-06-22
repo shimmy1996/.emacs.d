@@ -110,19 +110,15 @@ Specify both Latin font and CJK font.
   (defvar user/cjk-font "Noto Sans CJK SC"
     "Default font for CJK characters.")
 
-  (defvar user/font-size 16
-    "Default font size.")
+  (defvar user/font-size 17
+    "Default font size in px.")
 #+END_SRC
 
 *** CJK Font Fallback Logic
-Fallback logic for CJK fonts, ensures correct font gets used and CJK fonts
-scales correctly to twice the width of half-width characters.
+Fallback logic for CJK fonts, ensures correct font and size gets used for CJK.
 
-To ensure fontset gets correctly configured, I simply created my own. This is
-because =emacsclient= seems to have a different dynamic when creating
-=startup-fontset= and no other method guarantees consistent behavior between
-=emacs= and =emacsclient=.
-
+**** CJK Font Scaling.
+Ensure CJK fonts scales correctly to twice the width of half-width characters.
 #+BEGIN_SRC emacs-lisp
   (defvar user/cjk-font-scale
     '((16 . 1.0)
@@ -130,9 +126,26 @@ because =emacsclient= seems to have a different dynamic when creating
       (18 . 1.0))
     "Scaling factor to use for cjk font of given size.")
 
+  ;; Specify scaling factor for CJK font.
+  (setq face-font-rescale-alist
+        (list (cons user/cjk-font
+                    (cdr (assoc user/font-size user/cjk-font-scale)))))
+#+END_SRC
+
+**** CJK Enabled Fontset
+To ensure fontset gets correctly configured, I simply created one from
+scratch. This is because =emacsclient= seems to have a different dynamic when
+creating =startup-fontset= and no other method guarantees consistent behavior
+between =emacs= and =emacsclient=.
+
+#+BEGIN_SRC emacs-lisp
   (defvar user/standard-fontset
     (create-fontset-from-fontset-spec standard-fontset-spec)
     "User fontset with cjk font fallback.")
+
+  ;; Enable font customization for charset symbols.
+  ;; This charset contains puncuation marks, emoji, and etc..
+  (setq use-default-font-for-symbols nil)
 
   (defun user/set-font ()
     "Set Latin and CJK font for user/standard-fontset."
@@ -141,16 +154,20 @@ because =emacsclient= seems to have a different dynamic when creating
                       (font-spec :family user/latin-font :size user/font-size)
                       nil 'prepend)
     ;; CJK font.
-    (dolist (charset '(kana han chinese-gbk cjk-misc bopomofo))
+    (dolist (charset '(kana han cjk-misc bopomofo))
       (set-fontset-font user/standard-fontset charset
                         (font-spec :family user/cjk-font)
                         nil 'prepend))
-    ;; Specify scaling factor for CJK font.
-    (setq face-font-rescale-alist
-          (list (cons user/cjk-font
-                      (cdr (assoc user/font-size user/cjk-font-scale)))))
-    ;; Ensure user/standard-fontset gets used.
-    (add-to-list 'default-frame-alist (cons 'font user/standard-fontset)))
+    ;; Special settings for certain CJK puncuation marks.
+    (dolist (charset '((#x2018 . #x2019)    ;; CJK single quotes
+                       (#x201c . #x201d)))  ;; CJK double quotes
+      (set-fontset-font user/standard-fontset charset
+                        (font-spec :family user/cjk-font)
+                        nil 'prepend)))
+
+  ;; Ensure user/standard-fontset gets used for new frames.
+  (add-to-list 'default-frame-alist (cons 'font user/standard-fontset))
+  (add-to-list 'initial-frame-alist (cons 'font user/standard-fontset))
 
   ;; Apply changes.
   (user/set-font)
