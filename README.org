@@ -527,11 +527,18 @@ Install =company= and enable it globally.
     :init (global-company-mode))
 #+END_SRC
 
-*** Adjust Delay
+*** Tweaks
+**** Adjust Delay
 Set delay for auto-completion. 0 would be too extreme and wastes CPU clocks apparently.
 #+BEGIN_SRC emacs-lisp
   (setq company-idle-delay 0.01)
   (setq company-minimum-prefix-length 2)
+#+END_SRC
+
+**** Align Annotation
+Flush annotation on candidates to the right.
+#+BEGIN_SRC emacs-lisp
+  (setq company-tooltip-align-annotations t)
 #+END_SRC
 
 *** =yasnippet= Conflict
@@ -920,7 +927,9 @@ Wrap key bindings in =<kbd>=.
 #+END_SRC
 
 ** Rust-mode
-A compilation of settings for programming in rust.
+A compilation of settings for programming in rust. The recommended way to
+install rust is via =rustup=. Remember to use =rustup add component= to install
+=rust-fmt=, =rust-src=, and =rls=.
 
 *** Rust-mode
 Install =rust-mode=, use =rust-fmt= to format the code upon saving,
@@ -930,8 +939,16 @@ and automatically enable =rust-mode= for =*.rs= files.
     :ensure t
     :init
     (setq rust-format-on-save t)
-    (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-  )
+    (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode)))
+#+END_SRC
+
+*** Cargo Integration
+A minor mode for =cargo=, the package manager for rust.
+#+BEGIN_SRC emacs-lisp
+  (use-package cargo
+    :ensure t
+    :init
+    (add-hook 'rust-mode-hook 'cargo-minor-mode))
 #+END_SRC
 
 *** Flycheck Support
@@ -942,4 +959,14 @@ Better flycheck support via =flycheck-rust=.
     :init
     (with-eval-after-load 'rust-mode
       (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+#+END_SRC
+
+*** Racer
+Code completion utility for rust. Provides =company= integration.
+#+BEGIN_SRC emacs-lisp
+  (use-package racer
+    :ensure t
+    :init
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'rust-mode-hook #'eldoc-mode))
 #+END_SRC
