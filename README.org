@@ -457,6 +457,8 @@ Swiper, an Ivy-enhanced alternative to isearch.
     (("C-s"     . swiper)
      ("M-x"     . counsel-M-x)
      ("M-y"     . counsel-yank-pop)
+     ("C-c c f" . counsel-git)
+     ("C-c c s" . counsel-git-grep)
      ("C-x C-f" . counsel-find-file)
      ("C-x r b" . counsel-bookmark)
      ("C-h a"   . counsel-apropos)
