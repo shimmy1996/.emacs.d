@@ -12,9 +12,9 @@ my config is not too complicated for a single file to handle (yet).
 |-------------------+------------------------------|
 | [[Packages]]      | Package management.          |
 | [[Aesthetics]]    | UI and theme.                |
-| [[Enhancements]]  | Plug-and-play enhancements.  |
 | [[Plugins]]       | Larger scale packages.       |
 | [[Mode Specific]] | Settings specific to a mode. |
+| [[Enhancements]]  | Plug-and-play enhancements.  |
 
 * Packages
 Manage my package settings.
@@ -166,11 +166,11 @@ Use ~C-u C-x =~ to examine the font used for a specific character and use
                       nil 'prepend)
     ;; Latin font.
     ;; Only specify size here to allow text-scale-adjust work on other fonts.
-    (set-fontset-font user/standard-fontset 'latin
+    (set-fontset-font user/standard-fontset 'unicode
                       (font-spec :family user/latin-font :size user/font-size)
                       nil 'prepend)
     ;; CJK font.
-    (dolist (charset '(kana han cjk-misc bopomofo))
+    (dolist (charset '(kana han cjk-misc hangul bopomofo))
       (set-fontset-font user/standard-fontset charset
                         (font-spec :family user/cjk-font)
                         nil 'prepend))
@@ -284,145 +284,6 @@ Use mouse wheel to adjust zoom level.
 #+BEGIN_SRC emacs-lisp
   (global-set-key [C-mouse-4] 'text-scale-increase)
   (global-set-key [C-mouse-5] 'text-scale-decrease)
-#+END_SRC
-
-* Enhancements
-Packages providing enhancements to Emacs interface. Mostly simple
-plug-and-play packages or keybinding changes.
-
-** Dashboard
-An extensible Emacs startup screen showing you what’s most important.
-
-*** Installation
-Change default startup screen with =dashboard=.
-Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
-Also refresh dashboard to ensure customizations take effect.
-#+BEGIN_SRC emacs-lisp
-  (use-package dashboard
-    :ensure t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq initial-buffer-choice (lambda()
-                                  (dashboard-refresh-buffer)
-                                  (get-buffer "*dashboard*"))))
-#+END_SRC
-
-*** Customize Banner and Logo
-Customize banner and logo.
-#+BEGIN_SRC emacs-lisp
-  (defvar user/dashboard-banner-logo-titles
-    '("42"
-      "9 MORE SEASONS UNTIL I GET THAT DIPPING SZECHUAN SAUCE!"
-      "Execute order 66."
-      "Greetings from Emacs!"
-      "Project-iM@CS"
-      "Weak emperors mean strong viceroys."
-      "Wubba Lubba Dub-Dub!"))
-  (setq dashboard-banner-logo-title
-        (elt user/dashboard-banner-logo-titles
-             (random (length user/dashboard-banner-logo-titles))))
-  (setq dashboard-startup-banner
-        (expand-file-name "static/sxs.png" user-emacs-directory))
-#+END_SRC
-
-*** Customize Widgets
-**** =dashboard-insert-configs=
-Create widget to display important config files. Use ~c~ to jump to this section.
-#+BEGIN_SRC emacs-lisp
-  (defvar user/config-file-list
-    (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
-            '("README.org"
-              "init.el")))
-
-  (defun user/dashboard-insert-configs (list-size)
-    "Add a list of config files."
-    (when (dashboard-insert-recentf-list
-           "Config Files:"
-           (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
-      (dashboard-insert-shortcut "c" "Config Files:")))
-
-  (add-to-list 'dashboard-item-generators '(configs . user/dashboard-insert-configs))
-#+END_SRC
-
-**** =dashboard-insert-init-time=
-Display initialization time.
-#+BEGIN_SRC emacs-lisp
-  (defun user/dashboard-insert-init-time (list-size)
-     "Displays Emacs init time."
-     (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
-
-  (add-to-list 'dashboard-item-generators '(init-time . user/dashboard-insert-init-time))
-#+END_SRC
-
-**** Apply All Widgets
-Set items to display:
-#+BEGIN_SRC emacs-lisp
-  (setq dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 8)
-  ;                        (agenda . 5)
-  ;                        (registers . 5)
-                          (configs)
-                          (init-time)))
-#+END_SRC
-
-** HTML Export
-Convert buffer text and decorations to HTML by =htmlize-buffer= so
-that people can see what I see.
-#+BEGIN_SRC emacs-lisp
-  (use-package htmlize
-    :ensure t)
-#+END_SRC
-
-** Keybindings
-*** IBuffer
-Use =ibuffer= instead of =list-buffer=.
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
-  (autoload 'ibuffer "ibuffer" "List buffers." t)
-#+END_SRC
-** Keyfreq
-Records command frequency. I am planning on adjusting my keyboard
-layout with this information.
-#+BEGIN_SRC emacs-lisp
-    (use-package keyfreq
-      :ensure t
-      :init
-      (keyfreq-mode 1)
-      (keyfreq-autosave-mode 1))
-#+END_SRC
-
-** Magit
-Install =magit= and bind =magit-status= to ~C-c g~.
-#+BEGIN_SRC emacs-lisp
-  (use-package magit
-    :ensure t
-    :init
-    (global-set-key (kbd "C-c g") 'magit-status))
-#+END_SRC
-
-** Projectile
-Projectile is a project interaction library for Emacs. Its goal is to
-provide a nice set of features operating on a project level without
-introducing external dependencies(when feasible).
-
-*** Installation
-Install =projectile=.
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :init
-    (projectile-global-mode))
-#+END_SRC
-
-*** DISABLED Enable =helm= support
-Since I use =helm=, I need to install additional support.
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-projectile
-    :ensure t
-    :init
-    (setq projectile-completion-system 'helm)
-    (helm-projectile-on))
 #+END_SRC
 
 * Plugins
@@ -889,6 +750,20 @@ Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such a
 =org-mode= specific settings.
 
 *** Formatting
+**** Emphasis Boundary Regex
+Allow non-ASCII characters (CJK characters for instance) to be boundaries for
+Org emphasis markers. This need to happen before =org-mode= is loaded.
+#+BEGIN_SRC emacs-lisp
+  (use-package org
+    :init
+    (setq org-emphasis-regexp-components
+          (list (concat " \t('\"{"            "[:nonascii:]")  ;; prematch
+                (concat "- \t.,:!?;'\")}\\["  "[:nonascii:]")  ;; postmatch
+                " \t\r\n,\"'"                                  ;; border
+                "."                                            ;; body-regexp
+                1)))                                           ;; newline
+#+END_SRC
+
 **** Set Link Format
 Do not collapse the links.
 #+BEGIN_SRC emacs-lisp
@@ -1026,4 +901,145 @@ Code completion utility for rust. Provides =company= integration.
     :init
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'rust-mode-hook #'eldoc-mode))
+#+END_SRC
+
+* Enhancements
+Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
+packages. Load enhancements in the end to prevent their dependencies getting
+loaded prior to their own customization.
+
+** Dashboard
+An extensible Emacs startup screen showing you what’s most important.
+
+*** Installation
+Change default startup screen with =dashboard=.
+Customize =initial-buffer-choice= to affect new frames created by =emacsclient=.
+Also refresh dashboard to ensure customizations take effect.
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :ensure t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq initial-buffer-choice (lambda()
+                                  (dashboard-refresh-buffer)
+                                  (get-buffer "*dashboard*"))))
+#+END_SRC
+
+*** Customize Banner and Logo
+Customize banner and logo.
+#+BEGIN_SRC emacs-lisp
+  (defvar user/dashboard-banner-logo-titles
+    '("42"
+      "9 MORE SEASONS UNTIL I GET THAT DIPPING SZECHUAN SAUCE!"
+      "Execute order 66."
+      "Greetings from Emacs!"
+      "Project-iM@CS"
+      "Weak emperors mean strong viceroys."
+      "Wubba Lubba Dub-Dub!"))
+  (setq dashboard-banner-logo-title
+        (elt user/dashboard-banner-logo-titles
+             (random (length user/dashboard-banner-logo-titles))))
+  (setq dashboard-startup-banner
+        (expand-file-name "static/sxs.png" user-emacs-directory))
+#+END_SRC
+
+*** Customize Widgets
+**** =dashboard-insert-configs=
+Create widget to display important config files. Use ~c~ to jump to this section.
+#+BEGIN_SRC emacs-lisp
+  (defvar user/config-file-list
+    (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
+            '("README.org"
+              "init.el")))
+
+  (defun user/dashboard-insert-configs (list-size)
+    "Add a list of config files."
+    (when (dashboard-insert-recentf-list
+           "Config Files:"
+           (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
+      (dashboard-insert-shortcut "c" "Config Files:")))
+
+  (add-to-list 'dashboard-item-generators '(configs . user/dashboard-insert-configs))
+#+END_SRC
+
+**** =dashboard-insert-init-time=
+Display initialization time.
+#+BEGIN_SRC emacs-lisp
+  (defun user/dashboard-insert-init-time (list-size)
+     "Displays Emacs init time."
+     (insert (format "[Started Emacs in %s.]" (emacs-init-time))))
+
+  (add-to-list 'dashboard-item-generators '(init-time . user/dashboard-insert-init-time))
+#+END_SRC
+
+**** Apply All Widgets
+Set items to display:
+#+BEGIN_SRC emacs-lisp
+  (setq dashboard-items '((recents  . 5)
+                          (bookmarks . 5)
+                          (projects . 8)
+  ;                        (agenda . 5)
+  ;                        (registers . 5)
+                          (configs)
+                          (init-time)))
+#+END_SRC
+
+** HTML Export
+Convert buffer text and decorations to HTML by =htmlize-buffer= so
+that people can see what I see.
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+END_SRC
+
+** Keybindings
+*** IBuffer
+Use =ibuffer= instead of =list-buffer=.
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (autoload 'ibuffer "ibuffer" "List buffers." t)
+#+END_SRC
+
+** Keyfreq
+Records command frequency. I am planning on adjusting my keyboard
+layout with this information.
+#+BEGIN_SRC emacs-lisp
+    (use-package keyfreq
+      :ensure t
+      :init
+      (keyfreq-mode 1)
+      (keyfreq-autosave-mode 1))
+#+END_SRC
+
+** Magit
+Install =magit= and bind =magit-status= to ~C-c g~.
+#+BEGIN_SRC emacs-lisp
+  (use-package magit
+    :ensure t
+    :init
+    (global-set-key (kbd "C-c g") 'magit-status))
+#+END_SRC
+
+** Projectile
+Projectile is a project interaction library for Emacs. Its goal is to
+provide a nice set of features operating on a project level without
+introducing external dependencies(when feasible).
+
+*** Installation
+Install =projectile=.
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init
+    (projectile-global-mode))
+#+END_SRC
+
+*** DISABLED Enable =helm= support
+Since I use =helm=, I need to install additional support.
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-projectile
+    :ensure t
+    :init
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on))
 #+END_SRC
