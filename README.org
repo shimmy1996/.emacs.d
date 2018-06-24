@@ -166,11 +166,11 @@ Use ~C-u C-x =~ to examine the font used for a specific character and use
                       nil 'prepend)
     ;; Latin font.
     ;; Only specify size here to allow text-scale-adjust work on other fonts.
-    (set-fontset-font user/standard-fontset 'unicode
+    (set-fontset-font user/standard-fontset 'latin
                       (font-spec :family user/latin-font :size user/font-size)
                       nil 'prepend)
     ;; CJK font.
-    (dolist (charset '(kana han cjk-misc hangul bopomofo))
+    (dolist (charset '(kana han cjk-misc hangul kanbun bopomofo))
       (set-fontset-font user/standard-fontset charset
                         (font-spec :family user/cjk-font)
                         nil 'prepend))
