@@ -119,6 +119,10 @@ Specify font settings.
   (defvar user/standard-fontset
     (create-fontset-from-fontset-spec standard-fontset-spec)
     "Standard fontset for user.")
+
+  ;; Ensure user/standard-fontset gets used for new frames.
+  (add-to-list 'default-frame-alist (cons 'font user/standard-fontset))
+  (add-to-list 'initial-frame-alist (cons 'font user/standard-fontset))
 #+END_SRC
 
 *** CJK Font Scaling
@@ -176,15 +180,11 @@ Use ~C-u C-x =~ to examine the font used for a specific character and use
                         nil 'prepend))
     ;; Special settings for certain CJK puncuation marks.
     ;; These are full-width characters but by default uses half-width glyphs.
-    (dolist (charset '((#x2018 . #x2019)    ;; CJK single quotes "‘’"
-                       (#x201c . #x201d)))  ;; CJK double quotes "“”"
+    (dolist (charset '((#x2018 . #x2019)    ;; Curly single quotes "‘’"
+                       (#x201c . #x201d)))  ;; Curly double quotes "“”"
       (set-fontset-font user/standard-fontset charset
                         (font-spec :family user/cjk-font)
                         nil 'prepend)))
-
-  ;; Ensure user/standard-fontset gets used for new frames.
-  (add-to-list 'default-frame-alist (cons 'font user/standard-fontset))
-  (add-to-list 'initial-frame-alist (cons 'font user/standard-fontset))
 
   ;; Apply changes.
   (user/set-font)
