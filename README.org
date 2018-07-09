@@ -537,6 +537,15 @@ Enable math symbol backend only in =TeX-mode=.
   (add-hook 'TeX-mode-hook 'company-math-init)
 #+END_SRC
 
+**** =company-anaconda=
+Install =company-anaconda= and add it to =company-backends=.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-anaconda
+    :ensure t
+    :init (add-to-list 'company-backends
+                       'company-anaconda))
+#+END_SRC
+
 **** =company-auctex=
 Install =company-auctex= and add it to =company-backends=. This is for =acutex= macro completion.
 Adding backends is handled by =company-auctex-init=.
@@ -862,6 +871,66 @@ Enable =ox-hugo= as an option for exporting.
 Wrap key bindings in =<kbd>=.
 #+BEGIN_SRC emacs-lisp
   (setq org-hugo-use-code-for-kbd t)
+#+END_SRC
+
+** Python-mode
+Enhancements to =python-mode=.
+
+*** Anaconda Mode
+Code navigation, documentation lookup and completion for Python.
+#+BEGIN_SRC emacs-lisp
+  (use-package anaconda-mode
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'anaconda-mode)
+    (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
+#+END_SRC
+
+*** Auto Format
+**** yapf
+Use =yapf= to auto format python buffers on save.
+#+BEGIN_SRC emacs-lisp
+  (use-package yapfify
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'yapf-mode))
+#+END_SRC
+
+**** DISABLED pep8
+Use =py-autopep8= to auto format python buffers on save.
+#+BEGIN_SRC emacs-lisp
+  (use-package py-autopep8
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
+#+END_SRC
+
+*** Syntax Checking
+**** Flycheck
+By default =flycheck= only runs one available python checker.
+#+BEGIN_SRC emacs-lisp
+  (flycheck-add-next-checker 'python-flake8 'python-pylint)
+#+END_SRC
+
+**** DISABLED pycheckers
+By default =flycheck= only runs one available python checker. Use
+=flycheck-pycheckers=.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-pycheckers
+    :ensure t
+    :init
+    (setq flycheck-pycheckers-checkers '(pylint flake8))
+    (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+#+END_SRC
+
+*** Python Interpretor
+Use Jupyter console as default interpreter.
+#+BEGIN_SRC emacs-lisp
+  (setq python-shell-interpreter "jupyter"
+        python-shell-interpreter-args "console --simple-prompt"
+        python-shell-prompt-detect-failure-warning nil)
+  (add-to-list 'python-shell-completion-native-disabled-interpreters
+               "jupyter")
 #+END_SRC
 
 ** Rust-mode
