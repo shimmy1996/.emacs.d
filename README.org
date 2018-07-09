@@ -816,6 +816,12 @@ Don't allow editing of folded regions
   (setq org-catch-invisible-edits 'error)
 #+END_SRC
 
+**** Enforce TODO Dependencies
+Parent tasks should not be marked DONE until all subtasks are marked as DONE.
+#+BEGIN_SRC emacs-lisp
+  (setq org-enforce-todo-dependencies t)
+#+END_SRC
+
 *** Enable spell checking
 Spell checking with =flyspell-mode=. Would need to install dictionary lib like =aspell= in base system.
 #+BEGIN_SRC emacs-lisp
