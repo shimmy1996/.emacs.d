@@ -568,6 +568,15 @@ Add =company-yasnippet= backend for =yasnippet= key completion.
   (setq company-backends (mapcar #'user/enable-yas-for-backend company-backends))
 #+END_SRC
 
+**** =company-anaconda=
+Install =company-anaconda= and add it to =company-backends=.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-anaconda
+    :ensure t
+    :init (add-to-list 'company-backends
+                       'company-anaconda))
+#+END_SRC
+
 ** Flycheck
 Flycheck is a modern on-the-fly syntax checking extension for GNU
 Emacs, intended as replacement for the older Flymake extension which
@@ -816,7 +825,7 @@ Don't allow editing of folded regions
   (setq org-catch-invisible-edits 'error)
 #+END_SRC
 
-**** Enforce TODO Dependencies
+**** DISABLED Enforce TODO Dependencies
 Parent tasks should not be marked DONE until all subtasks are marked as DONE.
 #+BEGIN_SRC emacs-lisp
   (setq org-enforce-todo-dependencies t)
@@ -929,7 +938,7 @@ By default =flycheck= only runs one available python checker. Use
     (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
 #+END_SRC
 
-*** Python Interpretor
+*** DISABLED Python Interpretor
 Use Jupyter console as default interpreter.
 #+BEGIN_SRC emacs-lisp
   (setq python-shell-interpreter "jupyter"
@@ -1112,7 +1121,7 @@ Install =projectile=.
   (use-package projectile
     :ensure t
     :init
-    (projectile-global-mode))
+    (projectile-mode +1))
 #+END_SRC
 
 *** DISABLED Enable =helm= support
