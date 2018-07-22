@@ -516,35 +516,6 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
 #+END_SRC
 
 *** Backend Configurations
-**** =company-math=
-Install =company-math= and add it to =company-backends=.
-
-Enable unicode symbol backend globally.
-#+BEGIN_SRC emacs-lisp
-   (use-package company-math
-     :ensure t
-     :init (add-to-list 'company-backends
-                        '(company-math-symbols-unicode)))
-#+END_SRC
-
-Enable math symbol backend only in =TeX-mode=.
-#+BEGIN_SRC emacs-lisp
-  (defun company-math-init ()
-    (setq-local company-backends
-                (append '((company-math-symbols-latex))
-                        company-backends)))
-
-  (add-hook 'TeX-mode-hook 'company-math-init)
-#+END_SRC
-
-**** =company-anaconda=
-Install =company-anaconda= and add it to =company-backends=.
-#+BEGIN_SRC emacs-lisp
-  (use-package company-anaconda
-    :ensure t
-    :init (add-to-list 'company-backends
-                       'company-anaconda))
-#+END_SRC
 
 **** =company-auctex=
 Install =company-auctex= and add it to =company-backends=. This is for =acutex= macro completion.
@@ -552,7 +523,41 @@ Adding backends is handled by =company-auctex-init=.
 #+BEGIN_SRC emacs-lisp
   (use-package company-auctex
     :ensure t
-    :init (company-auctex-init))
+    :init
+    (company-auctex-init)
+    :config
+    (defun company-auctex-prefix (regexp)
+      "Returns the prefix for matching given REGEXP in org-mode and latex-mode."
+      (and (or (derived-mode-p 'latex-mode) (derived-mode-p 'org-mode))
+           (when (looking-back regexp)
+             (match-string-no-properties 1)))))
+#+END_SRC
+
+**** DISABLED =company-math=
+Install =company-math= and add it to =company-backends=.
+***** Unicode Symbols
+Enable unicode symbol backend globally.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-math
+    :ensure t)
+  ;;  :init (add-to-list 'company-backends
+  ;;                     '(company-math-symbols-unicode)))
+#+END_SRC
+
+***** Math Symbols
+Enable math symbol backend only in =TeX-mode= and =org-mode=.
+#+BEGIN_SRC emacs-lisp
+  (defun user/company-math-init()
+    (setq-local company-backends
+                (append '((company-math-symbols-latex
+                           ;;company-math-symbols-unicode
+                           company-auctex-macros
+                           company-auctex-symbols
+                           company-auctex-environments))
+                        company-backends)))
+
+  (add-hook 'TeX-mode-hook 'user/company-math-init)
+  (add-hook 'org-mode-hook 'user/company-math-init)
 #+END_SRC
 
 **** =company-yasnippet=
