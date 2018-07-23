@@ -107,7 +107,7 @@ Specify font settings.
   (defvar user/cjk-font "Noto Sans CJK SC"
     "Default font for CJK characters.")
 
-  (defvar user/latin-font "Iosevka Term"
+  (defvar user/latin-font "Iosevka Term SS09"
     "Default font for Latin characters.")
 
   (defvar user/unicode-font "Symbola"
@@ -252,6 +252,24 @@ Save =*~= backups in =$(pwd)/.bak=.
 ** Show Column Number
 #+BEGIN_SRC emacs-lisp
   (setq column-number-mode t)
+#+END_SRC
+
+** DISABLED Smooth Scrolling
+*** DISABLED Sublimity
+#+BEGIN_SRC emacs-lisp
+  (use-package sublimity
+    :ensure t
+    :config
+    (require 'sublimity-scroll)
+    (require 'sublimity-map)
+    (sublimity-global-mode))
+#+END_SRC
+
+*** Smooth
+#+BEGIN_SRC emacs-lisp
+  (use-package smooth-scrolling
+    :ensure t
+    :config (smooth-scrolling-mode 1))
 #+END_SRC
 
 ** UI Settings
