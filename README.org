@@ -483,35 +483,6 @@ Flush annotation on candidates to the right.
   (setq company-tooltip-align-annotations t)
 #+END_SRC
 
-*** =yasnippet= Conflict
-Pressing tab with company mode conflicts with =yasnippets=, this is
-the only fix that I found that makes everything work as expected.
-#+BEGIN_SRC emacs-lisp
-  (defun user/check-expansion()
-    (save-excursion
-      (if (looking-at "\\_>") t
-        (backward-char 1)
-        (if (looking-at "\\.") t
-          (backward-char 1)
-          (if (looking-at "->") t nil)))))
-
-  (defun user/do-yas-expand()
-    (let ((yas-fallback-behavior 'return-nil))
-      (yas-expand)))
-
-  (defun user/tab-indent-or-complete()
-    (interactive)
-    (if (minibufferp)
-        (minibuffer-complete)
-      (if (or (not yas-minor-mode)
-              (null (user/do-yas-expand)))
-          (if (user/check-expansion)
-              (company-complete-common)
-            (indent-for-tab-command)))))
-
-  (global-set-key (kbd "TAB") 'user/tab-indent-or-complete)
-#+END_SRC
-
 *** Tooltip Documentation
 Install dependency =pos-tip=.
 #+BEGIN_SRC emacs-lisp
@@ -534,7 +505,6 @@ Install =company-quickhelp= and set delay, FG/BG colors, max lines.
 #+END_SRC
 
 *** Backend Configurations
-
 **** =company-auctex=
 Install =company-auctex= and add it to =company-backends=. This is for =acutex= macro completion.
 Adding backends is handled by =company-auctex-init=.
@@ -542,7 +512,11 @@ Adding backends is handled by =company-auctex-init=.
   (use-package company-auctex
     :ensure t
     :init
-    (company-auctex-init)
+    (company-auctex-init))
+#+END_SRC
+
+***** DISABLED Workaround To Enable Completion in Org Mode
+#+BEGIN_SRC emacs-lisp
     :config
     (defun company-auctex-prefix (regexp)
       "Returns the prefix for matching given REGEXP in org-mode and latex-mode."
@@ -577,9 +551,17 @@ Enable math symbol backend only in =TeX-mode= and =org-mode=.
   (add-hook 'TeX-mode-hook 'user/company-math-init)
   (add-hook 'org-mode-hook 'user/company-math-init)
 #+END_SRC
+**** =company-anaconda=
+Install =company-anaconda= and add it to =company-backends=.
+#+BEGIN_SRC emacs-lisp
+  (use-package company-anaconda
+    :ensure t
+    :init (add-to-list 'company-backends
+                       'company-anaconda))
+#+END_SRC
 
 **** =company-yasnippet=
-Add =company-yasnippet= backend for =yasnippet= key completion.
+Add =company-yasnippet= backend for =yasnippet= key completion. Run this last to ensure coverage.
 #+BEGIN_SRC emacs-lisp
   (defun user/enable-yas-for-backend (backend)
     "Add yasnippet support for specified BACKEND."
@@ -591,13 +573,33 @@ Add =company-yasnippet= backend for =yasnippet= key completion.
   (setq company-backends (mapcar #'user/enable-yas-for-backend company-backends))
 #+END_SRC
 
-**** =company-anaconda=
-Install =company-anaconda= and add it to =company-backends=.
+*** =yasnippet= Conflict
+Pressing tab with company mode conflicts with =yasnippets=, this is the only fix
+that I found that makes everything work as expected. Make sure this is placed after backend settings.
 #+BEGIN_SRC emacs-lisp
-  (use-package company-anaconda
-    :ensure t
-    :init (add-to-list 'company-backends
-                       'company-anaconda))
+  (defun user/check-expansion()
+    (save-excursion
+      (if (looking-at "\\_>") t
+        (backward-char 1)
+        (if (looking-at "\\.") t
+          (backward-char 1)
+          (if (looking-at "->") t nil)))))
+
+  (defun user/do-yas-expand()
+    (let ((yas-fallback-behavior 'return-nil))
+      (yas-expand)))
+
+  (defun user/tab-indent-or-complete()
+    (interactive)
+    (if (minibufferp)
+        (minibuffer-complete)
+      (if (or (not yas-minor-mode)
+              (null (user/do-yas-expand)))
+          (if (user/check-expansion)
+              (company-complete-common)
+            (indent-for-tab-command)))))
+
+  (global-set-key (kbd "TAB") 'user/tab-indent-or-complete)
 #+END_SRC
 
 ** Flycheck
