@@ -59,6 +59,12 @@ Highlight portions of line over 80 characters in =prog-mode=.
   (add-hook 'prog-mode-hook 'whitespace-mode)
 #+END_SRC
 
+** Auto Detect File Changes
+Enable auto revert mode to auto-refresh when files have changed on disk.
+#+BEGIN_SRC emacs-lisp
+  (global-auto-revert-mode t)
+#+END_SRC
+
 ** Color Themes
 Install =base16-theme= and enable gruvbox dark pale.
 #+BEGIN_SRC emacs-lisp
