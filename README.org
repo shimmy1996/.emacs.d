@@ -8,8 +8,8 @@ in an hopefully understandable manner. I went from using multiple
 =.org= files back to a single one because =org-mode= is fantastic and
 my config is not too complicated for a single file to handle (yet).
 
-| Module            | Function                     |
-|-------------------+------------------------------|
+| Module        | Function                     |
+|---------------+------------------------------|
 | [[Packages]]      | Package management.          |
 | [[Aesthetics]]    | UI and theme.                |
 | [[Plugins]]       | Larger scale packages.       |
@@ -936,6 +936,16 @@ Enable =ox-hugo= as an option for exporting.
 Wrap key bindings in =<kbd>=.
 #+BEGIN_SRC emacs-lisp
   (setq org-hugo-use-code-for-kbd t)
+#+END_SRC
+
+**** Pandoc
+This is another exporter for org-mode that translates Org-mode file to various
+other formats via Pandoc.
+
+***** Installation
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-pandoc
+    :ensure t)
 #+END_SRC
 
 *** LaTeX Macros
