@@ -862,6 +862,17 @@ Parent tasks should not be marked DONE until all subtasks are marked as DONE.
   (setq org-enforce-todo-dependencies t)
 #+END_SRC
 
+**** Highlight LaTeX Related Syntax
+Non-nil means highlight LaTeX related syntax in the buffer. When non nil, the value should be a list containing any of the following symbols:
+- `latex' Highlight LaTeX snippets and environments.
+- `script' Highlight subscript and superscript.
+- `entities' Highlight entities.
+
+#+BEGIN_SRC emacs-lisp
+  (eval-after-load 'org
+    '(setf org-highlight-latex-and-related '(latex)))
+#+END_SRC
+
 *** Enable spell checking
 Spell checking with =flyspell-mode=. Would need to install dictionary lib like =aspell= in base system.
 #+BEGIN_SRC emacs-lisp
@@ -887,11 +898,19 @@ Enable evaluation of various languages in org-mode.
 
 There is no need to confirm execution for these languages.
 #+BEGIN_SRC emacs-lisp
+  (defvar user/org-babel-no-confirm-languages
+    '(emacs-lisp
+      python
+      R
+      latex-macros
+      org)
+    "Languages that do not user confirmation to execute")
+
   (setq org-confirm-babel-evaluate
         (lambda (lang body)
           (not (member lang
                        (mapcar (lambda (arg) (symbol-name arg))
-                               user/org-babel-enabled-languages)))))
+                               user/org-babel-no-confirm-languages)))))
 #+END_SRC
 
 *** Exporter Backends
@@ -917,6 +936,30 @@ Enable =ox-hugo= as an option for exporting.
 Wrap key bindings in =<kbd>=.
 #+BEGIN_SRC emacs-lisp
   (setq org-hugo-use-code-for-kbd t)
+#+END_SRC
+
+*** LaTeX Macros
+Support LaTeX macros in both LaTeX and HTML/MathJax export. We do this by adding
+a dummy language to Babel. Idea comes form [[https://www.reddit.com/r/orgmode/comments/7u2n0h/tip_for_defining_latex_macros_for_use_in_both/][here]].
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-src-lang-modes '("latex-macros" . latex))
+
+  (defvar org-babel-default-header-args:latex-macros
+    '((:results . "raw")
+      (:exports . "results")))
+
+  (defun user/prefix-all-lines (pre body)
+    (with-temp-buffer
+      (insert body)
+      (string-insert-rectangle (point-min) (point-max) pre)
+      (buffer-string)))
+
+  (defun org-babel-execute:latex-macros (body _params)
+    (concat
+     (user/prefix-all-lines "#+LATEX_HEADER: " body)
+     "\n#+HTML_HEAD_EXTRA: <div style=\"display: none\"> \\(\n"
+     (user/prefix-all-lines "#+HTML_HEAD_EXTRA: " body)
+     "\n#+HTML_HEAD_EXTRA: \\)</div>\n"))
 #+END_SRC
 
 ** Python-mode
