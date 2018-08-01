@@ -1,6 +1,7 @@
 #+TITLE: My Emacs Config
 #+AUTHOR: Shimmy Xu
 #+TODO: DISABLED(t) | ENABLED(d)
+#+PROPERTY: header-args :results none
 
 This is my humble collection of Emacs config, modeled after
 [[https://github.com/admiralakber/simplemacs][simplemacs]], documented
@@ -871,6 +872,12 @@ Non-nil means highlight LaTeX related syntax in the buffer. When non nil, the va
 #+BEGIN_SRC emacs-lisp
   (eval-after-load 'org
     '(setf org-highlight-latex-and-related '(latex)))
+#+END_SRC
+
+**** Default Image Size
+In LaTeX export, the default image size is =width=.9\linewidth=, which is way too large. Setting this to empty allows images to retain it's original size.
+#+BEGIN_SRC emacs-lisp
+  (setq org-latex-image-default-width ".6\\linewidth")
 #+END_SRC
 
 *** Enable spell checking
