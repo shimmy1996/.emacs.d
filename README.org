@@ -1084,12 +1084,40 @@ Code completion utility for rust. Provides =company= integration.
     (add-hook 'rust-mode-hook #'eldoc-mode))
 #+END_SRC
 
+** Julia-mode
+*** Julia-mode
+Official major mode for =julia=. Automatically enable it for =.jl= files.
+#+BEGIN_SRC emacs-lisp
+  (use-package julia-mode
+    :ensure t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.jl\\'" . julia-mode)))
+#+END_SRC
+*** Flycheck Support
+Flycheck support via =flycheck-julia=.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-julia
+    :ensure t
+    :init
+    (add-hook 'julia-mode-hook #'flycheck-julia-setup))
+#+END_SRC
+
+*** Better REPL
+This is a minor mode for interacting with a Julia REPL running inside Emacs.
+#+BEGIN_SRC emacs-lisp
+  (use-package julia-repl
+    :ensure t
+    :init
+    (with-eval-after-load 'julia-mode
+      (add-hook 'flycheck-mode-hook #'flycheck-julia-setup)))
+#+END_SRC
+
 * Enhancements
 Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
 packages. Load enhancements in the end to prevent their dependencies getting
 loaded prior to their own customization.
 
-** Dashboard
+** DISABLED Dashboard
 An extensible Emacs startup screen showing you what’s most important.
 
 *** Installation
