@@ -1184,7 +1184,7 @@ Display initialization time.
 **** Apply All Widgets
 Set items to display:
 #+BEGIN_SRC emacs-lisp
-  (setq dashboard-items '((recents  . 5)
+  (setq dashboard-items '((recents  . 10)
                           (bookmarks . 5)
                           (projects . 8)
   ;                        (agenda . 5)
