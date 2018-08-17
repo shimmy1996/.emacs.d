@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: latex-macros
+# key: lm_
+# --
+#+BEGIN_SRC latex-macros
+$0
+#+END_SRC
