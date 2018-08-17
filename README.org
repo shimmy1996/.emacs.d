@@ -820,7 +820,7 @@ Org emphasis markers. This need to happen before =org-mode= is loaded.
                 1)))                                           ;; newline
 #+END_SRC
 
-**** Set Link Format
+**** DISABLED Set Link Format
 Do not collapse the links.
 #+BEGIN_SRC emacs-lisp
   (org-toggle-link-display)
