@@ -1117,8 +1117,8 @@ Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
 packages. Load enhancements in the end to prevent their dependencies getting
 loaded prior to their own customization.
 
-** DISABLED Dashboard
-An extensible Emacs startup screen showing you what’s most important.
+** Dashboard
+An extensible Emacs startup screen showing you what's most important.
 
 *** Installation
 Change default startup screen with =dashboard=.
