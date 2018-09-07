@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: py
+# key: py_
+# --
+#+BEGIN_SRC python :session :results output ${1:graphics :file first.png}
+$0
+#+END_SRC
