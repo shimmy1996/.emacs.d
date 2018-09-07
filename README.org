@@ -1168,7 +1168,8 @@ Create widget to display important config files. Use ~c~ to jump to this section
   (defvar user/config-file-list
     (mapcar (lambda (arg) (expand-file-name arg user-emacs-directory))
             '("README.org"
-              "init.el")))
+              "init.el"
+              "static/math_macros.sty")))
 
   (defun user/dashboard-insert-configs (list-size)
     "Add a list of config files."
@@ -1196,7 +1197,7 @@ Set items to display:
   (setq dashboard-items '((recents  . 10)
                           (bookmarks . 5)
                           (projects . 8)
-  ;                        (agenda . 5)
+                          (agenda . 5)
   ;                        (registers . 5)
                           (configs)
                           (init-time)))
