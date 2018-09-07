@@ -623,13 +623,13 @@ Install =flycheck=.
 #+END_SRC
 
 *** Set C++ Standard Library
-Use =c++14= as the C++ standard.
+Use =c++17= as the C++ standard. =cppcheck= only support C++ 14 so far however.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'c++-mode-hook
             (lambda () (progn
                          (setq flycheck-cppcheck-standards '("c++14"))
-                         (setq flycheck-clang-language-standard "c++14")
-                         (setq flycheck-gcc-language-standard "c++14"))))
+                         (setq flycheck-clang-language-standard "c++17")
+                         (setq flycheck-gcc-language-standard "c++17"))))
 #+END_SRC
 
 *** Set Google C++ Syntax Checker
