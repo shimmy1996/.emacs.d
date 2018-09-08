@@ -622,7 +622,7 @@ Install =flycheck=.
     :init (global-flycheck-mode))
 #+END_SRC
 
-*** Set C++ Standard Library
+*** Set C++ Standard
 Use =c++17= as the C++ standard. =cppcheck= only support C++ 14 so far however.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'c++-mode-hook
@@ -793,6 +793,15 @@ Install and set hot keys for formatting.
 Use Google's C++ style.
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables '(clang-format-style "Google"))
+#+END_SRC
+
+*** Doxygen Highlighting
+Add highlighting for doxygen blocks.
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-doxygen
+    :ensure t
+    :init
+    (add-hook 'c-mode-common-hook 'highlight-doxygen-mode))
 #+END_SRC
 
 ** ESS
