@@ -973,6 +973,14 @@ other formats via Pandoc.
     :ensure t)
 #+END_SRC
 
+**** Jupyter Notebook
+Export backend for =.ipynb=. Package is not in MELPA yet, so using local copy. Repository is located [[https://github.com/jkitchin/ox-ipynb][here]].
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-ipynb
+    :load-path "local/ox-ipynb/")
+#+END_SRC
+
 *** LaTeX Macros
 Support LaTeX macros in both LaTeX and HTML/MathJax export. We do this by adding
 a dummy language to Babel. Idea comes form [[https://www.reddit.com/r/orgmode/comments/7u2n0h/tip_for_defining_latex_macros_for_use_in_both/][here]].
