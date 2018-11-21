@@ -1169,6 +1169,7 @@ Customize banner and logo.
       "Execute order 66."
       "Greetings from Emacs!"
       "Project-iM@CS"
+      "Supervillain Repair & Restoration"
       "Weak emperors mean strong viceroys."
       "Wubba Lubba Dub-Dub!"))
   (setq dashboard-banner-logo-title
