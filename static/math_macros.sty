@@ -12,8 +12,36 @@
 \newcommand{\ceil}[1]{\lceil#1\rceil}
 \newcommand{\floor}[1]{\lfloor#1\rfloor}
 \newcommand{\norm}[1]{\lVert#1\rVert}
-\newcommand{\mean}[1]{\overline{#1}}
+\newcommand{\mean}[1]{\bar{#1}}
 \newcommand{\conj}[1]{\overline{#1}}
+
+% Shorthands for mean.
+\newcommand{\ma}{\mean{a}}
+\newcommand{\mb}{\mean{b}}
+\newcommand{\mc}{\mean{c}}
+\newcommand{\md}{\mean{d}}
+\newcommand{\me}{\mean{e}}
+\newcommand{\mf}{\mean{f}}
+\newcommand{\mg}{\mean{g}}
+\newcommand{\mh}{\mean{h}}
+\newcommand{\mi}{\mean{i}}
+\newcommand{\mj}{\mean{j}}
+\newcommand{\mk}{\mean{k}}
+\newcommand{\ml}{\mean{l}}
+\newcommand{\mm}{\mean{m}}
+\newcommand{\mn}{\mean{n}}
+\newcommand{\mo}{\mean{o}}
+% \newcommand{\mp}{\mean{p}}
+\newcommand{\mq}{\mean{q}}
+\newcommand{\mr}{\mean{r}}
+\newcommand{\ms}{\mean{s}}
+\newcommand{\mt}{\mean{t}}
+% \newcommand{\mu}{\mean{u}}
+\newcommand{\mv}{\mean{v}}
+\newcommand{\mw}{\mean{w}}
+\newcommand{\mx}{\mean{x}}
+\newcommand{\my}{\mean{y}}
+\newcommand{\mz}{\mean{z}}
 
 \newcommand{\dd}{\mathop{}\,\mathrm{d}}
 \newcommand{\der}[2][]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
@@ -35,6 +63,9 @@
 \newcommand{\diag}{\operatorname{diag}}
 \newcommand{\col}{\operatorname{col}}
 \newcommand{\row}{\operatorname{row}}
+\newcommand{\arcsinh}{\operatorname{arcsinh}}
+\newcommand{\arccosh}{\operatorname{arccosh}}
+\newcommand{\arctanh}{\operatorname{arctanh}}
 
 \newcommand{\As}{\text{ as }}
 % \newcommand{\And}{\text{ and }}
@@ -48,7 +79,7 @@
 \newcommand{\No}{\text{No}}
 \newcommand{\Num}{\text{\# }}
 
-\newcommand{\vctr}[1]{\mathbf{#1}}
+\newcommand{\vctr}[1]{\boldsymbol{#1}}
 \newcommand{\mtrx}[1]{\bm{#1}}
 
 % Special
@@ -58,8 +89,31 @@
 \newcommand{\valpha}{\vctr{\alpha}}
 \newcommand{\vbeta}{\vctr{\beta}}
 \newcommand{\vgamma}{\vctr{\gamma}}
-\newcommand{\vmu}{\vctr{\mu}}
+\newcommand{\vdelta}{\vctr{\delta}}
+\newcommand{\vepsilon}{\vctr{\epsilon}}
+\newcommand{\vvarepsilon}{\vctr{\varepsilon}}
+\newcommand{\vzeta}{\vctr{\zeta}}
+\newcommand{\veta}{\vctr{\eta}}
 \newcommand{\vtheta}{\vctr{\theta}}
+\newcommand{\vvartheta}{\vctr{\vartheta}}
+\newcommand{\vkappa}{\vctr{\kappa}}
+\newcommand{\vlambda}{\vctr{\lambda}}
+\newcommand{\vmu}{\vctr{\mu}}
+\newcommand{\vnu}{\vctr{\nu}}
+\newcommand{\vxi}{\vctr{\xi}}
+\newcommand{\vpi}{\vctr{\pi}}
+\newcommand{\vvarpi}{\vctr{\varpi}}
+\newcommand{\vrho}{\vctr{\rho}}
+\newcommand{\vvarrho}{\vctr{\varrho}}
+\newcommand{\vsigma}{\vctr{\sigma}}
+\newcommand{\vvarsigma}{\vctr{\varsigma}}
+\newcommand{\vtau}{\vctr{\tau}}
+\newcommand{\vupsilon}{\vctr{\upsilon}}
+\newcommand{\vphi}{\vctr{\phi}}
+\newcommand{\vvarphi}{\vctr{\varphi}}
+\newcommand{\vchi}{\vctr{\chi}}
+\newcommand{\vpsi}{\vctr{\psi}}
+\newcommand{\vomega}{\vctr{\omega}}
 % Latin
 \newcommand{\va}{\vctr{a}}
 \newcommand{\vb}{\vctr{b}}
@@ -92,10 +146,16 @@
 \newcommand{\mZero}{\mtrx{0}}
 \newcommand{\mOne}{\mtrx{1}}
 % Greek
-\newcommand{\mBeta}{\mtrx{\beta}}
-\newcommand{\mPhi}{\mtrx{\Phi}}
+\newcommand{\mGamma}{\mtrx{\Gamma}}
+\newcommand{\mDelta}{\mtrx{\Delta}}
+\newcommand{\mTheta}{\mtrx{\Theta}}
 \newcommand{\mLambda}{\mtrx{\Lambda}}
+\newcommand{\mXi}{\mtrx{\Xi}}
+\newcommand{\mPi}{\mtrx{\Pi}}
 \newcommand{\mSigma}{\mtrx{\Sigma}}
+\newcommand{\mUpsilon}{\mtrx{\Upsilon}}
+\newcommand{\mPhi}{\mtrx{\Phi}}
+\newcommand{\mPsi}{\mtrx{\Psi}}
 \newcommand{\mOmega}{\mtrx{\Omega}}
 % Latin
 \newcommand{\mA}{\mtrx{A}}
@@ -223,20 +283,44 @@
 \newcommand{\rvY}{\randvctr{Y}}
 \newcommand{\rvZ}{\randvctr{Z}}
 
-% Maximum Likelihood Estimator
-\newcommand{\mle}[1]{\hat{#1}}
+\newcommand{\estm}[1]{\widehat{#1}}
+
 % Special
-\newcommand{\hsigmasq}{\mle{\sigma^{2}}}
+\newcommand{\hsigmasq}{\estm{\sigma^{2}}}
 % Greek
-\newcommand{\halpha}{\mle{\alpha}}
-\newcommand{\hbeta}{\mle{\beta}}
-\newcommand{\hgamma}{\mle{\gamma}}
-\newcommand{\htheta}{\mle{\theta}}
-\newcommand{\hlambda}{\mle{\lambda}}
-\newcommand{\hmu}{\mle{\mu}}
-\newcommand{\hnu}{\mle{\nu}}
-\newcommand{\hpi}{\mle{\pi}}
-\newcommand{\hsigma}{\mle{\sigma}}
+\newcommand{\halpha}{\estm{\alpha}}
+\newcommand{\hbeta}{\estm{\beta}}
+\newcommand{\hgamma}{\estm{\gamma}}
+\newcommand{\htheta}{\estm{\theta}}
+\newcommand{\hlambda}{\estm{\lambda}}
+\newcommand{\hmu}{\estm{\mu}}
+\newcommand{\hnu}{\estm{\nu}}
+\newcommand{\hpi}{\estm{\pi}}
+\newcommand{\hsigma}{\estm{\sigma}}
 % Latin
-\newcommand{\hx}{\mle{\x}}
-\newcommand{\hp}{\mle{p}}
+\newcommand{\ha}{\estm{a}}
+\newcommand{\hb}{\estm{b}}
+\newcommand{\hc}{\estm{c}}
+\newcommand{\hd}{\estm{d}}
+\newcommand{\he}{\estm{e}}
+\newcommand{\hf}{\estm{f}}
+\newcommand{\hg}{\estm{g}}
+\newcommand{\hh}{\estm{h}}
+\newcommand{\hi}{\estm{i}}
+\newcommand{\hj}{\estm{j}}
+\newcommand{\hk}{\estm{k}}
+\newcommand{\hl}{\estm{l}}
+%\newcommand{\hm}{\estm{m}}
+\newcommand{\hn}{\estm{n}}
+\newcommand{\ho}{\estm{o}}
+\newcommand{\hp}{\estm{p}}
+\newcommand{\hq}{\estm{q}}
+\newcommand{\hr}{\estm{r}}
+\newcommand{\hs}{\estm{s}}
+%\newcommand{\ht}{\estm{t}}
+\newcommand{\hu}{\estm{u}}
+\newcommand{\hv}{\estm{v}}
+\newcommand{\hw}{\estm{w}}
+\newcommand{\hx}{\estm{x}}
+\newcommand{\hy}{\estm{y}}
+\newcommand{\hz}{\estm{z}}
