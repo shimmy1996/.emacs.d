@@ -193,10 +193,8 @@ Use ~C-u C-x =~ to examine the font used for a specific character and use
                         (font-spec :family user/cjk-font)
                         nil 'prepend)))
 
-  ;; Apply changes.
+  ;; Apply changes. Do this only once, no need to repeat for new frames.
   (user/set-font)
-  ;; For emacsclient.
-  (add-hook 'before-make-frame-hook #'user/set-font)
 #+END_SRC
 
 ** Line Highlighting
