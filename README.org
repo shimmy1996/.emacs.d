@@ -655,7 +655,7 @@ Set various parameters for the checker.
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables
    '(flycheck-googlelint-verbose "5")
-   '(flycheck-googlelint-filter "-legal/copyright")
+   '(flycheck-googlelint-filter "-legal/copyright,-whitespace/braces")
    '(flycheck-googlelint-linelength "80"))
 #+END_SRC
 
