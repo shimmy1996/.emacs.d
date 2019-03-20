@@ -1238,10 +1238,13 @@ Create widget to display important config files. Use ~c~ to jump to this section
 
   (defun user/dashboard-insert-configs (list-size)
     "Add a list of config files."
-    (when (dashboard-insert-recentf-list
-           "Config Files:"
-           (dashboard-subseq user/config-file-list 0 (length user/config-file-list)))
-      (dashboard-insert-shortcut "c" "Config Files:")))
+    (dashboard-insert-section
+     "Config Files:"
+     user/config-file-list
+     list-size
+     "c"
+     `(lambda (&rest ignore) (find-file-existing ,el))
+     (abbreviate-file-name el)))
 
   (add-to-list 'dashboard-item-generators '(configs . user/dashboard-insert-configs))
 #+END_SRC
