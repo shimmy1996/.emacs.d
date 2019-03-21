@@ -1208,7 +1208,8 @@ Remember to set =$GOPATH= environment variable and add =$GOPATH/bin= to =$PATH=.
   (use-package go-mode
     :ensure t
     :init
-    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode)))
+    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+    (add-hook 'before-save-hook 'gofmt-before-save))
 #+END_SRC
 
 *** go-guru
