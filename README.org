@@ -226,6 +226,11 @@ Use spaces for indenting.
   (setq-default indent-tabs-mode nil)
 #+END_SRC
 
+For those that uses tab, set width to 4.
+#+BEGIN_SRC emacs-lisp
+  (setq-default tab-width 4)
+#+END_SRC
+
 ** Parenthesis Highlighting
 Highlight matching parenthesis.
 #+BEGIN_SRC emacs-lisp
