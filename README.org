@@ -572,6 +572,16 @@ Install =company-anaconda= and add it to =company-backends=.
                        'company-anaconda))
 #+END_SRC
 
+**** =company-go=
+Auto complete for =go=. This relies on =gocode= to be installed using =go get=. Either install from [[https://github.com/mdempsky/gocode][github.com/mdempsky/gocode]] or [[https://github.com/stamblerre/gocode][github.com/stamblerre/gocode]] (supports go-modules).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-go
+    :ensure t
+    :init (add-to-list 'company-backends
+                       'company-go))
+#+END_SRC
+
 **** =company-yasnippet=
 Add =company-yasnippet= backend for =yasnippet= key completion. Run this last to ensure coverage.
 #+BEGIN_SRC emacs-lisp
@@ -1199,16 +1209,6 @@ Remember to set =$GOPATH= environment variable and add =$GOPATH/bin= to =$PATH=.
     :ensure t
     :init
     (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode)))
-#+END_SRC
-
-*** company-go
-Auto complete for =go=. This relies on =gocode= to be installed using =go get=. Either install from [[https://github.com/mdempsky/gocode][github.com/mdempsky/gocode]] or [[https://github.com/stamblerre/gocode][github.com/stamblerre/gocode]] (supports go-modules).
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company-go
-    :ensure t
-    :init (add-to-list 'company-backends
-                       'company-go))
 #+END_SRC
 
 *** go-guru
