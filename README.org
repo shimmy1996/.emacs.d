@@ -1190,6 +1190,35 @@ This is a minor mode for interacting with a Julia REPL running inside Emacs.
       (add-hook 'flycheck-mode-hook #'flycheck-julia-setup)))
 #+END_SRC
 
+** Go-mode
+Remember to set =$GOPATH= environment variable and add =$GOPATH/bin= to =$PATH=.
+
+*** Go-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :ensure t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode)))
+#+END_SRC
+
+*** company-go
+Auto complete for =go=. This relies on =gocode= to be installed using =go get=. Either install from [[https://github.com/mdempsky/gocode][github.com/mdempsky/gocode]] or [[https://github.com/stamblerre/gocode][github.com/stamblerre/gocode]] (supports go-modules).
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-go
+    :ensure t
+    :init (add-to-list 'company-backends
+                       'company-go))
+#+END_SRC
+
+*** go-guru
+Helpful code analysis tool, requires [[https://godoc.org/golang.org/x/tools/cmd/guru][golang.org/x/tools/cmd/guru]].
+
+#+BEGIN_SRC emacs-lisp
+  (use-package go-guru
+    :ensure t)
+#+END_SRC
+
 * Enhancements
 Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
 packages. Load enhancements in the end to prevent their dependencies getting
