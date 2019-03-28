@@ -820,10 +820,17 @@ Add highlighting for doxygen blocks.
 #+END_SRC
 
 ** ESS
-Emacs Speaks Statistics (ESS) is an add-on package for emacs text editors such as GNU Emacs and XEmacs. It is designed to support editing of scripts and interaction with various statistical analysis programs such as R, S-Plus, SAS, Stata and OpenBUGS/JAGS.
+Use ESS (Emacs Speaks Statistics) for R and Julia support.
 #+BEGIN_SRC emacs-lisp
   (use-package ess
-    :ensure t)
+    :ensure t
+    :config
+    ;; Add latex symbol completion in julia buffer mode as well.
+    (add-hook 'ess-julia-mode-hook
+          (lambda()
+            (add-hook 'completion-at-point-functions
+                      'ess-julia-latexsub-completion nil 'local)))
+    (setq tab-always-indent 'complete))
 #+END_SRC
 
 ** Org-mode
@@ -1174,13 +1181,12 @@ Code completion utility for rust. Provides =company= integration.
 
 ** Julia-mode
 *** Julia-mode
-Official major mode for =julia=. Automatically enable it for =.jl= files.
+Official major mode for =julia=. This is required as a dependency for =ess-julia-mode=.
 #+BEGIN_SRC emacs-lisp
   (use-package julia-mode
-    :ensure t
-    :init
-    (add-to-list 'auto-mode-alist '("\\.jl\\'" . julia-mode)))
+    :ensure t)
 #+END_SRC
+
 *** Flycheck Support
 Flycheck support via =flycheck-julia=.
 #+BEGIN_SRC emacs-lisp
