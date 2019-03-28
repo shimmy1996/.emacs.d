@@ -1188,12 +1188,12 @@ Official major mode for =julia=. This is required as a dependency for =ess-julia
 #+END_SRC
 
 *** Flycheck Support
-Flycheck support via =flycheck-julia=.
+Flycheck support via =flycheck-julia=. This relies on [[https://github.com/tonyhffong/Lint.jl][Lint.jl]], which doesn't have a release yet for Julia 1.0. A work around is to give the repository URL to =Pkg= instead of the package name and fix 1.0 incompatibilities as they show up.
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck-julia
     :ensure t
     :init
-    (add-hook 'julia-mode-hook #'flycheck-julia-setup))
+    (add-hook 'ess-julia-mode-hook #'flycheck-julia-setup))
 #+END_SRC
 
 *** Better REPL
