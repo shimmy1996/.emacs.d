@@ -845,7 +845,7 @@ Use ESS (Emacs Speaks Statistics) for R and Julia support.
 #+END_SRC
 
 ** Lsp-mode
-Use Language Server Protocol (LSP) for code completion, jump to definition, etc. By default uses =clang=
+Use Language Server Protocol (LSP) for code completion, jump to definition, etc. Check [[https://github.com/emacs-lsp/lsp-mode#supported-languages][list of language servers]] and install needed ones.
 
 *** Installation
 #+BEGIN_SRC emacs-lisp
