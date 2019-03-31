@@ -833,6 +833,53 @@ Use ESS (Emacs Speaks Statistics) for R and Julia support.
     (setq tab-always-indent 'complete))
 #+END_SRC
 
+** Go-mode
+Remember to set =$GOPATH= environment variable and add =$GOPATH/bin= to =$PATH=.
+
+*** Go-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package go-mode
+    :ensure t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+    (add-hook 'before-save-hook 'gofmt-before-save))
+#+END_SRC
+
+*** go-guru
+Helpful code analysis tool, requires [[https://godoc.org/golang.org/x/tools/cmd/guru][golang.org/x/tools/cmd/guru]].
+
+#+BEGIN_SRC emacs-lisp
+  (use-package go-guru
+    :ensure t)
+#+END_SRC
+
+** Julia-mode
+*** Julia-mode
+Official major mode for =julia=. This is required as a dependency for =ess-julia-mode=.
+#+BEGIN_SRC emacs-lisp
+  (use-package julia-mode
+    :ensure t)
+#+END_SRC
+
+*** Flycheck Support
+Flycheck support via =flycheck-julia=. This relies on [[https://github.com/tonyhffong/Lint.jl][Lint.jl]], which doesn't have a release yet for Julia 1.0. A work around is to give the repository URL to =Pkg= instead of the package name and fix 1.0 incompatibilities as they show up.
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck-julia
+    :ensure t
+    :init
+    (add-hook 'ess-julia-mode-hook #'flycheck-julia-setup))
+#+END_SRC
+
+*** Better REPL
+This is a minor mode for interacting with a Julia REPL running inside Emacs.
+#+BEGIN_SRC emacs-lisp
+  (use-package julia-repl
+    :ensure t
+    :init
+    (with-eval-after-load 'julia-mode
+      (add-hook 'flycheck-mode-hook #'flycheck-julia-setup)))
+#+END_SRC
+
 ** Org-mode
 =org-mode= specific settings.
 
@@ -1177,53 +1224,6 @@ Code completion utility for rust. Provides =company= integration.
     :init
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'rust-mode-hook #'eldoc-mode))
-#+END_SRC
-
-** Julia-mode
-*** Julia-mode
-Official major mode for =julia=. This is required as a dependency for =ess-julia-mode=.
-#+BEGIN_SRC emacs-lisp
-  (use-package julia-mode
-    :ensure t)
-#+END_SRC
-
-*** Flycheck Support
-Flycheck support via =flycheck-julia=. This relies on [[https://github.com/tonyhffong/Lint.jl][Lint.jl]], which doesn't have a release yet for Julia 1.0. A work around is to give the repository URL to =Pkg= instead of the package name and fix 1.0 incompatibilities as they show up.
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck-julia
-    :ensure t
-    :init
-    (add-hook 'ess-julia-mode-hook #'flycheck-julia-setup))
-#+END_SRC
-
-*** Better REPL
-This is a minor mode for interacting with a Julia REPL running inside Emacs.
-#+BEGIN_SRC emacs-lisp
-  (use-package julia-repl
-    :ensure t
-    :init
-    (with-eval-after-load 'julia-mode
-      (add-hook 'flycheck-mode-hook #'flycheck-julia-setup)))
-#+END_SRC
-
-** Go-mode
-Remember to set =$GOPATH= environment variable and add =$GOPATH/bin= to =$PATH=.
-
-*** Go-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package go-mode
-    :ensure t
-    :init
-    (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
-    (add-hook 'before-save-hook 'gofmt-before-save))
-#+END_SRC
-
-*** go-guru
-Helpful code analysis tool, requires [[https://godoc.org/golang.org/x/tools/cmd/guru][golang.org/x/tools/cmd/guru]].
-
-#+BEGIN_SRC emacs-lisp
-  (use-package go-guru
-    :ensure t)
 #+END_SRC
 
 * Enhancements
