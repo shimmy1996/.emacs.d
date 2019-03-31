@@ -592,7 +592,7 @@ Company completion via =company-lsp=.
 #+END_SRC
 
 **** =company-yasnippet=
-Add =company-yasnippet= backend for =yasnippet= key completion. Run this last to ensure coverage.
+Add =company-yasnippet= backend for =yasnippet= key completion.
 #+BEGIN_SRC emacs-lisp
   (defun user/enable-yas-for-backend (backend)
     "Add yasnippet support for specified BACKEND."
@@ -600,8 +600,12 @@ Add =company-yasnippet= backend for =yasnippet= key completion. Run this last to
         backend
       (append (if (consp backend) backend (list backend))
               '(:with company-yasnippet))))
-  ;; Enable for all backends.
-  (setq company-backends (mapcar #'user/enable-yas-for-backend company-backends))
+
+  ;; Enable for all company backends. Add to hook to prevent missed backends.
+  (add-hook 'yas-minor-mode-hook
+            (lambda()
+              (setq company-backends
+                    (mapcar #'user/enable-yas-for-backend company-backends))))
 #+END_SRC
 
 *** =yasnippet= Conflict
