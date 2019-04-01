@@ -1152,6 +1152,14 @@ a dummy language to Babel. Idea comes form [[https://www.reddit.com/r/orgmode/co
      "\n#+HTML_HEAD_EXTRA: \\)</div>\n"))
 #+END_SRC
 
+*** LaTeX Preview Scaling
+Default size is a bit small. Also note that the =fullpage= package can cause preview images to become really tall. Use =dvisvgm= backend for clearer image.
+
+#+BEGIN_SRC emacs-lisp
+  (plist-put org-format-latex-options :scale 1.75)
+  (setq org-latex-create-formula-image-program 'dvisvgm)
+#+END_SRC
+
 ** Python-mode
 Enhancements to =python-mode=.
 
