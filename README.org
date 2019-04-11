@@ -1128,7 +1128,8 @@ Quick and easy hack to get python source blocks to work.
                                      (version . "0.6.0"))))))
 #+END_SRC
 
-*** LaTeX Macros
+**** LaTeX
+***** LaTeX Macros
 Support LaTeX macros in both LaTeX and HTML/MathJax export. We do this by adding
 a dummy language to Babel. Idea comes form [[https://www.reddit.com/r/orgmode/comments/7u2n0h/tip_for_defining_latex_macros_for_use_in_both/][here]].
 #+BEGIN_SRC emacs-lisp
@@ -1152,13 +1153,38 @@ a dummy language to Babel. Idea comes form [[https://www.reddit.com/r/orgmode/co
      "\n#+HTML_HEAD_EXTRA: \\)</div>\n"))
 #+END_SRC
 
-*** LaTeX Preview Scaling
+***** LaTeX Preview Scaling
 Default size is a bit small. Also note that the =fullpage= package can cause preview images to become really tall. Use =dvisvgm= backend for clearer image.
 
 #+BEGIN_SRC emacs-lisp
   (plist-put org-format-latex-options :scale 1.75)
   (setq org-latex-create-formula-image-program 'dvisvgm)
 #+END_SRC
+
+***** Code Listing
+Use =minted= for code listings. Relies on =pygments= for syntax highlighting.
+#+BEGIN_SRC emacs-lisp
+  (setq org-latex-listings 'minted)
+  (setq org-latex-minted-options
+        '(("frame" "single")
+          ("fontsize" "\\scriptsize")))
+  (add-to-list 'org-latex-packages-alist '("" "minted" nil))
+#+END_SRC
+
+***** SVG Support
+Use =svg= for supporting SVGs. Requires =inkscape= to be installed.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-latex-packages-alist '("" "svg" nil))
+#+END_SRC
+
+***** Shell Escape
+This is required for =minted= and =svg= to work.
+#+begin_src emacs-lisp :eval query-export :exports none :results silent
+  (setq-local org-latex-pdf-process
+              '("%latex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                "%latex -shell-escape -interaction nonstopmode -output-directory %o %f"
+                "%latex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+end_src
 
 ** Python-mode
 Enhancements to =python-mode=.
