@@ -844,6 +844,58 @@ Use ESS (Emacs Speaks Statistics) for R and Julia support.
     (setq tab-always-indent 'complete))
 #+END_SRC
 
+*** Auto Format R Code
+Use the =styler= R package to format buffer or region. Modeled after =yapfify=.
+#+BEGIN_SRC emacs-lisp
+  (defun user/r-format-call-bin (input-buffer output-buffer beginning end)
+    "Format specified region in INPUT-BUFFER saving the output to OUTPUT-BUFFER.
+
+  BEGINNING and END specify region to format."
+    (with-current-buffer input-buffer
+      (write-region beginning end "r-format-temp.R"))
+    (call-process "R" nil nil nil "-e"
+                  "library(styler);style_file(\"r-format-temp.R\")")
+    (with-current-buffer output-buffer
+      (insert-file-contents "r-format-temp.R" nil nil nil t))
+    (with-current-buffer input-buffer
+      (delete-region beginning end)
+      (insert-buffer-substring output-buffer))
+    (delete-file "r-format-temp.R"))
+
+  (defun user/r-format-region (beginning end)
+    "Try to r-format the current region.
+
+  Output from R is stored in *r-format*."
+    (interactive "r")
+    (let* ((original-buffer (current-buffer))
+           (original-point (point))  ; Because we are replacing text, save-excursion does not always work.
+           (buffer-windows (get-buffer-window-list original-buffer nil t))
+           (original-window-pos (mapcar 'window-start buffer-windows))
+           (tmpbuf (generate-new-buffer "*r-format*"))
+           (r-output (user/r-format-call-bin original-buffer tmpbuf beginning end)))
+      (deactivate-mark)
+      ;; Clean up tmpbuf
+      (kill-buffer tmpbuf)
+      ;; restore window to similar state
+      (goto-char original-point)
+      (mapcar* 'set-window-start buffer-windows original-window-pos)))
+
+  (defun user/r-format-buffer ()
+    "Format whole buffer."
+    (interactive)
+    (user/r-format-region (point-min) (point-max)))
+#+END_SRC
+
+Auto format on save for =ess-r-mode=.
+#+BEGIN_SRC emacs-lisp
+  (defun user/r-format-before-save ()
+    "Runs r-format on current buffer if in ess-r-mode."
+    (interactive)
+    (when (eq major-mode 'ess-r-mode) (user/r-format-buffer)))
+
+  (add-hook 'before-save-hook 'user/r-format-before-save)
+#+END_SRC
+
 ** Lsp-mode
 Use Language Server Protocol (LSP) for code completion, jump to definition, etc. Check [[https://github.com/emacs-lsp/lsp-mode#supported-languages][list of language servers]] and install needed ones.
 
