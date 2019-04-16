@@ -1231,11 +1231,11 @@ Use =svg= for supporting SVGs. Requires =inkscape= to be installed.
 
 ***** Shell Escape
 This is required for =minted= and =svg= to work.
-#+begin_src emacs-lisp :eval query-export :exports none :results silent
-  (setq-local org-latex-pdf-process
-              '("%latex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                "%latex -shell-escape -interaction nonstopmode -output-directory %o %f"
-                "%latex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process
+        '("%latex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "%latex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "%latex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 #+end_src
 
 ** Python-mode
