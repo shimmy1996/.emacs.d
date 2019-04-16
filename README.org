@@ -886,12 +886,15 @@ Use the =styler= R package to format buffer or region. Modeled after =yapfify=.
     (user/r-format-region (point-min) (point-max)))
 #+END_SRC
 
-Auto format on save for =ess-r-mode=.
+Auto format bindings for =ess-r-mode=. Need a keybinding as auto formatting doesn't seem to work for org-mode =src= blocks.
 #+BEGIN_SRC emacs-lisp
   (defun user/r-format-before-save ()
     "Runs r-format on current buffer if in ess-r-mode."
     (interactive)
     (when (eq major-mode 'ess-r-mode) (user/r-format-buffer)))
+
+  (add-hook 'ess-r-mode-hook
+            (lambda () (local-set-key (kbd "C-u") 'user/r-format-buffer)))
 
   (add-hook 'before-save-hook 'user/r-format-before-save)
 #+END_SRC
