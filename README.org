@@ -915,7 +915,8 @@ Use Language Server Protocol (LSP) for code completion, jump to definition, etc.
   (use-package lsp-mode
     :ensure t
     :init
-    (add-hook 'prog-mode-hook #'lsp))
+    (add-hook 'prog-mode-hook #'lsp)
+    (setq lsp-prefer-flymake nil))
 #+END_SRC
 
 *** Flycheck Integration
@@ -924,7 +925,8 @@ Flycheck integration via =lsp-ui=.
   (use-package lsp-ui
     :ensure t
     :init
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    (setq lsp-ui-flycheck-enable t))
 #+END_SRC
 
 ** Go-mode
