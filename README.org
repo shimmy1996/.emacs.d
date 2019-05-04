@@ -698,6 +698,22 @@ Set various parameters for the checker.
       (flycheck-clang-analyzer-setup)))
 #+END_SRC
 
+*** Proselint
+A linter for prose, checks grammar and style errors. Setting from [[https://unconj.ca/blog/linting-prose-in-emacs.html][here]].
+
+#+BEGIN_SRC emacs-lisp
+  (flycheck-define-checker proselint
+    "A linter for prose."
+    :command ("proselint" source-inplace)
+    :error-patterns
+    ((warning line-start (file-name) ":" line ":" column ": "
+              (id (one-or-more (not (any " "))))
+              (message) line-end))
+    :modes (text-mode markdown-mode gfm-mode org-mode))
+
+  (add-to-list 'flycheck-checkers 'proselint)
+#+END_SRC
+
 ** Yasnippet
 YASnippet is a template system for Emacs. It allows you to type an
 abbreviation and automatically expand it into function templates.
