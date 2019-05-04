@@ -923,7 +923,7 @@ Auto format bindings for =ess-r-mode=. Need a keybinding as auto formatting does
 #+END_SRC
 
 ** Lsp-mode
-Use Language Server Protocol (LSP) for code completion, jump to definition, etc. Check [[https://github.com/emacs-lsp/lsp-mode#supported-languages][list of language servers]] and install needed ones.
+Use Language Server Protocol (LSP) for code completion, jump to definition, etc. Check [[https://github.com/emacs-lsp/lsp-mode#supported-languages][list of language servers]] and install needed ones. Note that the Python language server also requires =autopepe8= and =pydocstyle=.
 
 *** Installation
 #+BEGIN_SRC emacs-lisp
