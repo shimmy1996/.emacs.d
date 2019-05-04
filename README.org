@@ -978,6 +978,12 @@ This is a minor mode for interacting with a Julia REPL running inside Emacs.
 ** Org-mode
 =org-mode= specific settings.
 
+*** Allow Alphabetical Ordering
+Allows the use of "a." or "b)" in ordered lists.
+#+BEGIN_SRC emacs-lisp
+  (setq org-list-allow-alphabetical t)
+#+END_SRC
+
 *** Global Keybindings
 Set up keybindings for global access.
 #+BEGIN_SRC emacs-lisp
