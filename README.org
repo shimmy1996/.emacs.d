@@ -1306,14 +1306,15 @@ By default =flycheck= only runs one available python checker. Use
     (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
 #+END_SRC
 
-*** DISABLED Python Interpretor
-Use Jupyter console as default interpreter.
+*** Python Interpretor
+Use =ipython= as default interpreter and disable feature warning.
+
 #+BEGIN_SRC emacs-lisp
-  (setq python-shell-interpreter "jupyter"
-        python-shell-interpreter-args "console --simple-prompt"
+  (setq python-shell-interpreter "ipython"
+        python-shell-interpreter-args "-i --simple-prompt"
         python-shell-prompt-detect-failure-warning nil)
   (add-to-list 'python-shell-completion-native-disabled-interpreters
-               "jupyter")
+               "ipython")
 #+END_SRC
 
 ** Rust-mode
