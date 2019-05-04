@@ -818,8 +818,7 @@ Install and set hot keys for formatting.
 **** Set code style
 Use Google's C++ style.
 #+BEGIN_SRC emacs-lisp
-  (custom-set-variables '(clang-format-style
-                          "{BasedOnStyle: Google, ReflowComments: false}"))
+  (custom-set-variables '(clang-format-style "file"))
 #+END_SRC
 
 *** Doxygen Highlighting
