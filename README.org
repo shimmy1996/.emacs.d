@@ -1286,7 +1286,74 @@ Code navigation, documentation lookup and completion for Python.
 #+END_SRC
 
 *** Auto Format
-**** yapf
+**** black
+Use =black= to auto format python buffers on save.
+#+BEGIN_SRC emacs-lisp
+  (use-package blacken
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'blacken-mode)
+    (setq blacken-allow-py36 t))
+#+END_SRC
+
+**** isort
+Use =isort= to sort imports.
+#+BEGIN_SRC emacs-lisp
+  (use-package isortify
+    :ensure t
+    :init
+    (add-hook 'python-mode-hook 'isortify-mode)
+    (setq isortify-multi-line-output 3)
+    (setq isortify-trailing-comma t)
+    (setq isortify-line-width 88))
+#+END_SRC
+
+Use =black=-compatible settings as recommended [[https://github.com/python/black#how-black-wraps-lines][here]]. Add missing variables to conform with =black=.
+#+BEGIN_SRC emacs-lisp
+  (defcustom isortify-force-grid-wrap nil
+    "Force from imports to be grid wrapped regardless of line length, where the value given is the number of imports allowed before wrapping occurs.")
+
+  (defcustom isortify-use-parentheses nil
+    "Tells isort to use parenthesis for line continuation instead of \ for lines over the allotted line length limit.")
+
+  (setq isortify-force-grid-wrap 0)
+  (setq isortify-use-parentheses t)
+
+  (defun isortify-call-args ()
+    "Collect CLI arguments for isort process."
+    (let (args)
+      (when (string= "ipython" python-shell-interpreter)
+        (push "--" args))
+      (when isortify-multi-line-output
+        (push "--multi-line" args)
+        (push (number-to-string isortify-multi-line-output) args))
+      (when isortify-trailing-comma
+        (push "--trailing-comma" args))
+      (when isortify-known-first-party
+        (dolist (project isortify-known-first-party)
+          (push "--project" args)
+          (push project args)))
+      (when isortify-known-third-party
+        (dolist (thirdparty isortify-known-third-party)
+          (push "--thirdparty" args)
+          (push thirdparty args)))
+      (when isortify-lines-after-imports
+        (push "--lines-after-imports" args)
+        (push (number-to-string isortify-lines-after-imports) args))
+      (when isortify-line-width
+        (push "--line-width" args)
+        (push (number-to-string isortify-line-width) args))
+      (when isortify-force-grid-wrap
+        (push "--force-grid-wrap" args)
+        (push (number-to-string isortify-force-grid-wrap) args))
+      (when isortify-use-parentheses
+        (push "--use-parentheses" args))
+      (push "-" args)
+      (reverse args)))
+#+END_SRC
+
+
+**** DISABLED yapf
 Use =yapf= to auto format python buffers on save.
 #+BEGIN_SRC emacs-lisp
   (use-package yapfify
