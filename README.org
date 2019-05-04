@@ -902,7 +902,7 @@ Auto format bindings for =ess-r-mode=. Need a keybinding as auto formatting does
     (when (eq major-mode 'ess-r-mode) (user/r-format-buffer)))
 
   (add-hook 'ess-r-mode-hook
-            (lambda () (local-set-key (kbd "C-u") 'user/r-format-buffer)))
+            (lambda () (local-set-key (kbd "C-c u") 'user/r-format-buffer)))
 
   (add-hook 'before-save-hook 'user/r-format-before-save)
 #+END_SRC
