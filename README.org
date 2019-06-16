@@ -1496,8 +1496,10 @@ Customize banner and logo.
       "Enter-Meta-Alt-Control-Shift"
       "Execute order 66."
       "Greetings from Emacs!"
+      "POLYBIUS"
       "Project-iM@CS"
       "Supervillain Repair & Restoration"
+      "This is fine."
       "Weak emperors mean strong viceroys."
       "Wissen ist Nacht!"
       "Wubba Lubba Dub-Dub!"))
