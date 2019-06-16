@@ -1450,6 +1450,25 @@ Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
 packages. Load enhancements in the end to prevent their dependencies getting
 loaded prior to their own customization.
 
+** Avy
+Jump to visible text using a char-based decision tree, similar to =ace-jump=.
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :ensure t
+    :init
+    (define-prefix-command 'user/avy-prefix)
+    (global-set-key (kbd "C-:") 'user/avy-prefix)
+    (define-key 'user/avy-prefix (kbd "c") 'avy-goto-char)
+    (define-key 'user/avy-prefix (kbd "C") 'avy-goto-char-2)
+    (define-key 'user/avy-prefix (kbd "t") 'avy-goto-char-timer)
+    (define-key 'user/avy-prefix (kbd "s") 'avy-goto-char-in-line)
+    (define-key 'user/avy-prefix (kbd "l") 'avy-goto-line)
+    (define-key 'user/avy-prefix (kbd "w") 'avy-goto-word-0)
+    (define-key 'user/avy-prefix (kbd "W") 'avy-goto-word-1)
+    (define-key 'user/avy-prefix (kbd "o") 'avy-org-goto-heading-timer)
+    (define-key 'user/avy-prefix (kbd "O") 'avy-org-refile-as-child))
+#+END_SRC
+
 ** Dashboard
 An extensible Emacs startup screen showing you what's most important.
 
