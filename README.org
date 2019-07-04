@@ -1492,6 +1492,7 @@ Customize banner and logo.
   (defvar user/dashboard-banner-logo-titles
     '("42"
       "9 MORE SEASONS UNTIL I GET THAT DIPPING SZECHUAN SAUCE!"
+      "Avocado + Maple Syrup = Dragon Fruit"
       "Eight-Megabytes-And-Constantly-Swapping"
       "Enter-Meta-Alt-Control-Shift"
       "Execute order 66."
