@@ -1309,8 +1309,7 @@ Use =black= to auto format python buffers on save.
   (use-package blacken
     :ensure t
     :init
-    (add-hook 'python-mode-hook 'blacken-mode)
-    (setq blacken-allow-py36 t))
+    (add-hook 'python-mode-hook 'blacken-mode))
 #+END_SRC
 
 **** isort
