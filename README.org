@@ -1462,6 +1462,12 @@ Code completion utility for rust. Provides =company= integration.
     (add-hook 'rust-mode-hook #'eldoc-mode))
 #+END_SRC
 
+** Zig-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package zig-mode
+    :ensure t)
+#+END_SRC
+
 * Enhancements
 Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
 packages. Load enhancements in the end to prevent their dependencies getting
