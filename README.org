@@ -853,6 +853,23 @@ Syntax highlighting and indention for =CMakeLists.txt=.
     :ensure t)
 #+END_SRC
 
+*** Eldoc Support
+Eldoc for CMake.
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc-cmake
+    :ensure t
+    :hook (cmake-mode . eldoc-cmake-enable))
+#+END_SRC
+
+*** Extended syntax highlighting
+Additional syntax highlighting for CMake. For some reason manual activation is still required.
+#+BEGIN_SRC emacs-lisp
+  (use-package cmake-font-lock
+    :ensure t
+    :init (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
+    :hook (cmake-mode . cmake-font-lock-activate))
+#+END_SRC
+
 ** ESS
 Use ESS (Emacs Speaks Statistics) for R and Julia support.
 #+BEGIN_SRC emacs-lisp
