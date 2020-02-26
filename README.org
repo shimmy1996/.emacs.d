@@ -1614,6 +1614,13 @@ Install =magit= and bind =magit-status= to ~C-c g~.
     (global-set-key (kbd "C-c g") 'magit-status))
 #+END_SRC
 
+*** Magit annex
+Magit support for =git-annex=.
+#+BEGIN_SRC emacs-lisp
+  (use-package magit-annex
+    :ensure t)
+#+END_SRC
+
 ** Projectile
 Projectile is a project interaction library for Emacs. Its goal is to
 provide a nice set of features operating on a project level without
