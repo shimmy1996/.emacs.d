@@ -881,10 +881,12 @@ Use ESS (Emacs Speaks Statistics) for R and Julia support.
           (lambda()
             (add-hook 'completion-at-point-functions
                       'ess-julia-latexsub-completion nil 'local)))
+    (add-hook 'ess-mode-hook
+              (lambda () (ess-set-style 'RStudio)))
     (setq tab-always-indent 'complete))
 #+END_SRC
 
-*** Auto Format R Code
+*** DISABLED Auto Format R Code
 Use the =styler= R package to format buffer or region. Modeled after =yapfify=.
 #+BEGIN_SRC emacs-lisp
   (defun user/r-format-call-bin (input-buffer output-buffer beginning end)
@@ -939,7 +941,7 @@ Auto format bindings for =ess-r-mode=. Need a keybinding as auto formatting does
   (add-hook 'before-save-hook 'user/r-format-before-save)
 #+END_SRC
 
-** DISABLED Lsp-mode
+** Lsp-mode
 Use Language Server Protocol (LSP) for code completion, jump to definition, etc. Check [[https://github.com/emacs-lsp/lsp-mode#supported-languages][list of language servers]] and install needed ones. Note that the Python language server also requires =autopepe8= and =pydocstyle=.
 
 *** Installation
@@ -947,8 +949,14 @@ Use Language Server Protocol (LSP) for code completion, jump to definition, etc.
   (use-package lsp-mode
     :ensure t
     :init
-    (add-hook 'prog-mode-hook #'lsp)
-    (setq lsp-prefer-flymake nil))
+    ;; (add-hook 'prog-mode-hook #'lsp)
+    (setq lsp-prefer-flymake nil)
+    :config
+    (setq lsp-keymap-prefix "C-c p")
+    (add-to-list 'lsp--formatting-indent-alist
+                 '(ess-r-mode . ess-indent-offset))
+    :bind-keymap
+    ("C-c p" . lsp-command-map))
 #+END_SRC
 
 *** Flycheck Integration
