@@ -1480,6 +1480,17 @@ Packages providing enhancements to Emacs interface. Mostly simple plug-and-play
 packages. Load enhancements in the end to prevent their dependencies getting
 loaded prior to their own customization.
 
+** Ace Window
+Prepare for the age of multi-monitor and ultra-wide.
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :bind
+    (("M-o" . ace-window))
+    :init
+    (setq aw-keys '(?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9 ?0)))
+#+END_SRC
+
 ** Avy
 Jump to visible text using a char-based decision tree, similar to =ace-jump=.
 #+BEGIN_SRC emacs-lisp
