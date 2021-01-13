@@ -1503,6 +1503,8 @@ Jump to visible text using a char-based decision tree, similar to =ace-jump=.
     (define-key 'user/avy-prefix (kbd "C") 'avy-goto-char-2)
     (define-key 'user/avy-prefix (kbd "t") 'avy-goto-char-timer)
     (define-key 'user/avy-prefix (kbd "s") 'avy-goto-char-in-line)
+    (define-key 'user/avy-prefix (kbd "j") 'avy-goto-line-above)
+    (define-key 'user/avy-prefix (kbd "k") 'avy-goto-line-below)
     (define-key 'user/avy-prefix (kbd "l") 'avy-goto-line)
     (define-key 'user/avy-prefix (kbd "w") 'avy-goto-word-0)
     (define-key 'user/avy-prefix (kbd "W") 'avy-goto-word-1)
