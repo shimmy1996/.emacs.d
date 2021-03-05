@@ -649,16 +649,16 @@ Install =flycheck=.
 #+END_SRC
 
 *** Set C++ Standard
-Use =c++17= as the C++ standard. =cppcheck= only support C++ 14 so far however.
+Use =c++20= as the C++ standard.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'c++-mode-hook
             (lambda () (progn
-                         (setq flycheck-cppcheck-standards '("c++14"))
-                         (setq flycheck-clang-language-standard "c++17")
-                         (setq flycheck-gcc-language-standard "c++17"))))
+                         (setq flycheck-cppcheck-standards '("c++20"))
+                         (setq flycheck-clang-language-standard "c++20")
+                         (setq flycheck-gcc-language-standard "c++20"))))
 #+END_SRC
 
-*** Set Google C++ Syntax Checker
+*** DISABLED Set Google C++ Syntax Checker
 **** Install =flycheck-google-cpplint=
 Add Google C++ Style checker for =flycheck= (Now deprecated, using local copy).
 On Arch Linux, if using AUR package =cpplint=, need to modify command
@@ -685,17 +685,6 @@ Set various parameters for the checker.
    '(flycheck-googlelint-verbose "5")
    '(flycheck-googlelint-filter "-legal/copyright,-whitespace/braces")
    '(flycheck-googlelint-linelength "80"))
-#+END_SRC
-
-*** Set Clang Analyzer
-**** Install =flycheck-clang-analyzer=
-#+BEGIN_SRC emacs-lisp
-  (use-package flycheck-clang-analyzer
-    :ensure t
-    :init
-    (with-eval-after-load 'flycheck
-      (require 'flycheck-clang-analyzer)
-      (flycheck-clang-analyzer-setup)))
 #+END_SRC
 
 *** Proselint
